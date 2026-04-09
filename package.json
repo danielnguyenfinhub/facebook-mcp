@@ -5,18 +5,15 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "esbuild src/index.ts --bundle --platform=node --target=node20 --outfile=dist/index.js --format=cjs --external:express",
-    "start": "node dist/index.js",
-    "dev": "npm run build && node dist/index.js"
+    "start": "node dist/index.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.11.0",
     "express": "^5.1.0",
-    "zod": "^3.23.0"
-  },
-  "devDependencies": {
-    "@types/express": "^5.0.2",
-    "@types/node": "^22.15.3",
+    "zod": "^3.23.0",
+    "esbuild": "^0.25.0",
     "typescript": "^5.8.3",
-    "esbuild": "^0.25.0"
+    "@types/express": "^5.0.2",
+    "@types/node": "^22.15.3"
   }
 }

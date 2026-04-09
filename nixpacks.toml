@@ -1,5 +1,11 @@
+[phases.setup]
+apt-pkgs = []
+
+[phases.install]
+cmds = ["npm ci || npm install"]
+
 [phases.build]
-cmds = ["npm install", "npm run build"]
+cmds = ["npx esbuild src/index.ts --bundle --platform=node --target=node20 --outfile=dist/index.js --format=cjs --external:express"]
 
 [start]
 cmd = "node dist/index.js"
