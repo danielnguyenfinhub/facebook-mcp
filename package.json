@@ -4,9 +4,9 @@
   "description": "Facebook Graph API MCP Server",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "esbuild src/index.ts --bundle --platform=node --target=node20 --outfile=dist/index.js --format=cjs --external:express",
     "start": "node dist/index.js",
-    "dev": "tsc && node dist/index.js"
+    "dev": "npm run build && node dist/index.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.11.0",
@@ -16,6 +16,7 @@
   "devDependencies": {
     "@types/express": "^5.0.2",
     "@types/node": "^22.15.3",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "esbuild": "^0.25.0"
   }
 }
