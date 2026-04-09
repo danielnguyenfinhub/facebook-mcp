@@ -1,0 +1,5 @@
+[phases.build]
+cmds = ["npm install", "NODE_OPTIONS=--max-old-space-size=2048 npx tsc"]
+
+[start]
+cmd = "node dist/index.js"
