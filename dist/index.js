@@ -1,4 +1,3 @@
-"use strict";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -16760,7 +16759,7 @@ var require_shams = __commonJS({
         return true;
       }
       var obj = {};
-      var sym = Symbol("test");
+      var sym = /* @__PURE__ */ Symbol("test");
       var symObj = Object(sym);
       if (typeof sym === "string") {
         return false;
@@ -16819,7 +16818,7 @@ var require_has_symbols = __commonJS({
       if (typeof origSymbol("foo") !== "symbol") {
         return false;
       }
-      if (typeof Symbol("bar") !== "symbol") {
+      if (typeof /* @__PURE__ */ Symbol("bar") !== "symbol") {
         return false;
       }
       return hasSymbolSham();
@@ -17076,7 +17075,7 @@ var require_get_intrinsic = __commonJS({
     var throwTypeError = /* @__PURE__ */ __name(function() {
       throw new $TypeError();
     }, "throwTypeError");
-    var ThrowTypeError = $gOPD ? function() {
+    var ThrowTypeError = $gOPD ? (function() {
       try {
         arguments.callee;
         return throwTypeError;
@@ -17087,7 +17086,7 @@ var require_get_intrinsic = __commonJS({
           return throwTypeError;
         }
       }
-    }() : throwTypeError;
+    })() : throwTypeError;
     var hasSymbols = require_has_symbols()();
     var getProto = require_get_proto();
     var $ObjectGPO = require_Object_getPrototypeOf();
@@ -17614,13 +17613,13 @@ var require_utils2 = __commonJS({
     var setMaxIndex = /* @__PURE__ */ __name(function setMaxIndex2(obj, maxIndex) {
       overflowChannel.set(obj, maxIndex);
     }, "setMaxIndex");
-    var hexTable = function() {
+    var hexTable = (function() {
       var array2 = [];
       for (var i = 0; i < 256; ++i) {
         array2[array2.length] = "%" + ((i < 16 ? "0" : "") + i.toString(16)).toUpperCase();
       }
       return array2;
-    }();
+    })();
     var compactQueue = /* @__PURE__ */ __name(function compactQueue2(queue) {
       while (queue.length > 1) {
         var item = queue.pop();
@@ -19133,7 +19132,7 @@ var require_ipaddr = __commonJS({
         }
         return defaultName;
       };
-      ipaddr.IPv4 = function() {
+      ipaddr.IPv4 = (function() {
         function IPv4(octets) {
           var k, len, octet;
           if (octets.length !== 4) {
@@ -19219,7 +19218,7 @@ var require_ipaddr = __commonJS({
           return 32 - cidr;
         };
         return IPv4;
-      }();
+      })();
       ipv4Part = "(0?\\d+|0x[a-f0-9]+)";
       ipv4Regexes = {
         fourOctet: new RegExp("^" + ipv4Part + "\\." + ipv4Part + "\\." + ipv4Part + "\\." + ipv4Part + "$", "i"),
@@ -19235,7 +19234,7 @@ var require_ipaddr = __commonJS({
           }
         }, "parseIntAuto");
         if (match = string3.match(ipv4Regexes.fourOctet)) {
-          return function() {
+          return (function() {
             var k, len, ref, results;
             ref = match.slice(1, 6);
             results = [];
@@ -19244,25 +19243,25 @@ var require_ipaddr = __commonJS({
               results.push(parseIntAuto(part));
             }
             return results;
-          }();
+          })();
         } else if (match = string3.match(ipv4Regexes.longValue)) {
           value = parseIntAuto(match[1]);
           if (value > 4294967295 || value < 0) {
             throw new Error("ipaddr: address outside defined range");
           }
-          return function() {
+          return (function() {
             var k, results;
             results = [];
             for (shift = k = 0; k <= 24; shift = k += 8) {
               results.push(value >> shift & 255);
             }
             return results;
-          }().reverse();
+          })().reverse();
         } else {
           return null;
         }
       };
-      ipaddr.IPv6 = function() {
+      ipaddr.IPv6 = (function() {
         function IPv6(parts, zoneId) {
           var i, k, l, len, part, ref;
           if (parts.length === 16) {
@@ -19323,7 +19322,7 @@ var require_ipaddr = __commonJS({
         };
         IPv6.prototype.toNormalizedString = function() {
           var addr, part, suffix;
-          addr = function() {
+          addr = (function() {
             var k, len, ref, results;
             ref = this.parts;
             results = [];
@@ -19332,7 +19331,7 @@ var require_ipaddr = __commonJS({
               results.push(part.toString(16));
             }
             return results;
-          }.call(this).join(":");
+          }).call(this).join(":");
           suffix = "";
           if (this.zoneId) {
             suffix = "%" + this.zoneId;
@@ -19341,7 +19340,7 @@ var require_ipaddr = __commonJS({
         };
         IPv6.prototype.toFixedLengthString = function() {
           var addr, part, suffix;
-          addr = function() {
+          addr = (function() {
             var k, len, ref, results;
             ref = this.parts;
             results = [];
@@ -19350,7 +19349,7 @@ var require_ipaddr = __commonJS({
               results.push(part.toString(16).padStart(4, "0"));
             }
             return results;
-          }.call(this).join(":");
+          }).call(this).join(":");
           suffix = "";
           if (this.zoneId) {
             suffix = "%" + this.zoneId;
@@ -19435,7 +19434,7 @@ var require_ipaddr = __commonJS({
           return 128 - cidr;
         };
         return IPv6;
-      }();
+      })();
       ipv6Part = "(?:[0-9a-f]+::?)+";
       zoneIndex = "%[0-9a-z]{1,}";
       ipv6Regexes = {
@@ -19479,7 +19478,7 @@ var require_ipaddr = __commonJS({
         if (string3[string3.length - 1] === ":") {
           string3 = string3.slice(0, -1);
         }
-        parts = function() {
+        parts = (function() {
           var k, len, ref, results;
           ref = string3.split(":");
           results = [];
@@ -19488,7 +19487,7 @@ var require_ipaddr = __commonJS({
             results.push(parseInt(part, 16));
           }
           return results;
-        }();
+        })();
         return {
           parts,
           zoneId
@@ -35141,7 +35140,7 @@ ZodNaN.create = (params) => {
     ...processCreateParams(params)
   });
 };
-var BRAND = Symbol("zod_brand");
+var BRAND = /* @__PURE__ */ Symbol("zod_brand");
 var ZodBranded = class extends ZodType {
   static {
     __name(this, "ZodBranded");
@@ -35354,14 +35353,14 @@ var ostring = /* @__PURE__ */ __name(() => stringType().optional(), "ostring");
 var onumber = /* @__PURE__ */ __name(() => numberType().optional(), "onumber");
 var oboolean = /* @__PURE__ */ __name(() => booleanType().optional(), "oboolean");
 var coerce = {
-  string: /* @__PURE__ */ __name((arg) => ZodString.create({ ...arg, coerce: true }), "string"),
-  number: /* @__PURE__ */ __name((arg) => ZodNumber.create({ ...arg, coerce: true }), "number"),
-  boolean: /* @__PURE__ */ __name((arg) => ZodBoolean.create({
+  string: /* @__PURE__ */ __name(((arg) => ZodString.create({ ...arg, coerce: true })), "string"),
+  number: /* @__PURE__ */ __name(((arg) => ZodNumber.create({ ...arg, coerce: true })), "number"),
+  boolean: /* @__PURE__ */ __name(((arg) => ZodBoolean.create({
     ...arg,
     coerce: true
-  }), "boolean"),
-  bigint: /* @__PURE__ */ __name((arg) => ZodBigInt.create({ ...arg, coerce: true }), "bigint"),
-  date: /* @__PURE__ */ __name((arg) => ZodDate.create({ ...arg, coerce: true }), "date")
+  })), "boolean"),
+  bigint: /* @__PURE__ */ __name(((arg) => ZodBigInt.create({ ...arg, coerce: true })), "bigint"),
+  date: /* @__PURE__ */ __name(((arg) => ZodDate.create({ ...arg, coerce: true })), "date")
 };
 var NEVER = INVALID;
 
@@ -35418,7 +35417,6 @@ function $constructor(name, initializer3, params) {
   return _;
 }
 __name($constructor, "$constructor");
-var $brand = Symbol("zod_brand");
 var $ZodAsyncError = class extends Error {
   static {
     __name(this, "$ZodAsyncError");
@@ -37995,8 +37993,6 @@ function en_default2() {
 __name(en_default2, "default");
 
 // node_modules/zod/v4/core/registries.js
-var $output = Symbol("ZodOutput");
-var $input = Symbol("ZodInput");
 var $ZodRegistry = class {
   static {
     __name(this, "$ZodRegistry");
@@ -39338,10 +39334,10 @@ var ZodMiniType = /* @__PURE__ */ $constructor("ZodMiniType", (inst, def) => {
   };
   inst.clone = (_def, params) => clone(inst, _def, params);
   inst.brand = () => inst;
-  inst.register = (reg, meta) => {
+  inst.register = ((reg, meta) => {
     reg.add(inst, meta);
     return inst;
-  };
+  });
 });
 var ZodMiniObject = /* @__PURE__ */ $constructor("ZodMiniObject", (inst, def) => {
   $ZodObject.init(inst, def);
@@ -39619,10 +39615,10 @@ var ZodType2 = /* @__PURE__ */ $constructor("ZodType", (inst, def) => {
   };
   inst.clone = (def2, params) => clone(inst, def2, params);
   inst.brand = () => inst;
-  inst.register = (reg, meta) => {
+  inst.register = ((reg, meta) => {
     reg.add(inst, meta);
     return inst;
-  };
+  });
   inst.parse = (data, params) => parse2(inst, data, params, { callee: inst.parse });
   inst.safeParse = (data, params) => safeParse3(inst, data, params);
   inst.parseAsync = async (data, params) => parseAsync2(inst, data, params, { callee: inst.parseAsync });
@@ -41792,7 +41788,7 @@ function isTerminal(status) {
 __name(isTerminal, "isTerminal");
 
 // node_modules/zod-to-json-schema/dist/esm/Options.js
-var ignoreOverride = Symbol("Let zodToJsonSchema decide on which parser to use");
+var ignoreOverride = /* @__PURE__ */ Symbol("Let zodToJsonSchema decide on which parser to use");
 var defaultOptions = {
   name: void 0,
   $refStrategy: "root",
@@ -44825,7 +44821,7 @@ var Server = class extends Protocol {
 };
 
 // node_modules/@modelcontextprotocol/sdk/dist/esm/server/completable.js
-var COMPLETABLE_SYMBOL = Symbol.for("mcp.completable");
+var COMPLETABLE_SYMBOL = /* @__PURE__ */ Symbol.for("mcp.completable");
 function isCompletable(schema) {
   return !!schema && typeof schema === "object" && COMPLETABLE_SYMBOL in schema;
 }
@@ -45769,7 +45765,7 @@ var newHeadersFromIncoming = /* @__PURE__ */ __name((incoming) => {
   }
   return new Headers(headerRecord);
 }, "newHeadersFromIncoming");
-var wrapBodyStream = Symbol("wrapBodyStream");
+var wrapBodyStream = /* @__PURE__ */ Symbol("wrapBodyStream");
 var newRequestFromIncoming = /* @__PURE__ */ __name((method, url, headers, incoming, abortController) => {
   const init = {
     method,
@@ -45817,13 +45813,13 @@ var newRequestFromIncoming = /* @__PURE__ */ __name((method, url, headers, incom
   }
   return new Request(url, init);
 }, "newRequestFromIncoming");
-var getRequestCache = Symbol("getRequestCache");
-var requestCache = Symbol("requestCache");
-var incomingKey = Symbol("incomingKey");
-var urlKey = Symbol("urlKey");
-var headersKey = Symbol("headersKey");
-var abortControllerKey = Symbol("abortControllerKey");
-var getAbortController = Symbol("getAbortController");
+var getRequestCache = /* @__PURE__ */ Symbol("getRequestCache");
+var requestCache = /* @__PURE__ */ Symbol("requestCache");
+var incomingKey = /* @__PURE__ */ Symbol("incomingKey");
+var urlKey = /* @__PURE__ */ Symbol("urlKey");
+var headersKey = /* @__PURE__ */ Symbol("headersKey");
+var abortControllerKey = /* @__PURE__ */ Symbol("abortControllerKey");
+var getAbortController = /* @__PURE__ */ Symbol("getAbortController");
 var requestPrototype = {
   get method() {
     return this[incomingKey].method || "GET";
@@ -45914,9 +45910,9 @@ var newRequest = /* @__PURE__ */ __name((incoming, defaultHostname) => {
   req[urlKey] = url.href;
   return req;
 }, "newRequest");
-var responseCache = Symbol("responseCache");
-var getResponseCache = Symbol("getResponseCache");
-var cacheKey = Symbol("cache");
+var responseCache = /* @__PURE__ */ Symbol("responseCache");
+var getResponseCache = /* @__PURE__ */ Symbol("getResponseCache");
+var cacheKey = /* @__PURE__ */ Symbol("cache");
 var GlobalResponse = global.Response;
 var Response2 = class _Response {
   static {
@@ -46059,8 +46055,8 @@ var X_ALREADY_SENT = "x-hono-already-sent";
 if (typeof global.crypto === "undefined") {
   global.crypto = import_crypto.default;
 }
-var outgoingEnded = Symbol("outgoingEnded");
-var incomingDraining = Symbol("incomingDraining");
+var outgoingEnded = /* @__PURE__ */ Symbol("outgoingEnded");
+var incomingDraining = /* @__PURE__ */ Symbol("incomingDraining");
 var DRAIN_TIMEOUT_MS = 500;
 var MAX_DRAIN_BYTES = 64 * 1024 * 1024;
 var drainIncoming = /* @__PURE__ */ __name((incoming) => {
@@ -47147,6 +47143,7 @@ var StdioServerTransport = class {
 
 // src/fb-client.ts
 var PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN || "";
+var MARKETING_TOKEN = process.env.FACEBOOK_ACCESS_TOKEN || PAGE_ACCESS_TOKEN || "";
 var API_VERSION = process.env.FB_API_VERSION || "v25.0";
 var BASE_URL = `https://graph.facebook.com/${API_VERSION}`;
 async function fbFetch(path, options = {}) {
@@ -47175,6 +47172,32 @@ async function fbDelete(path) {
   return fbFetch(path, { method: "DELETE" });
 }
 __name(fbDelete, "fbDelete");
+async function marketingFetch(path, options = {}) {
+  const separator = path.includes("?") ? "&" : "?";
+  const url = `${BASE_URL}${path}${separator}access_token=${MARKETING_TOKEN}`;
+  const res = await fetch(url, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers
+    }
+  });
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Facebook Marketing API error ${res.status}: ${body}`);
+  }
+  const text = await res.text();
+  return text ? JSON.parse(text) : {};
+}
+__name(marketingFetch, "marketingFetch");
+async function marketingPost(path, body) {
+  return marketingFetch(path, { method: "POST", body: JSON.stringify(body) });
+}
+__name(marketingPost, "marketingPost");
+async function marketingDelete(path) {
+  return marketingFetch(path, { method: "DELETE" });
+}
+__name(marketingDelete, "marketingDelete");
 
 // src/tools/pages.ts
 function registerPageTools(server) {
@@ -48620,8 +48643,1235 @@ function registerRatingTools(server) {
 }
 __name(registerRatingTools, "registerRatingTools");
 
+// src/tools/ad-accounts.ts
+function registerAdAccountTools(server) {
+  server.tool(
+    "list_ad_accounts",
+    "List ad accounts for the authenticated user, including account status, currency, timezone, spend info, and business details.",
+    {
+      limit: external_exports.number().optional().default(25).describe("Maximum number of ad accounts to return (default 25)"),
+      after: external_exports.string().optional().describe("Pagination cursor: return results after this cursor"),
+      before: external_exports.string().optional().describe("Pagination cursor: return results before this cursor")
+    },
+    async (params) => {
+      try {
+        const query = new URLSearchParams({
+          fields: "id,name,account_id,account_status,currency,timezone_name,business,amount_spent,balance,spend_cap,business_name,funding_source_details",
+          limit: String(params.limit)
+        });
+        if (params.after) query.set("after", params.after);
+        if (params.before) query.set("before", params.before);
+        const result = await marketingFetch(`/me/adaccounts?${query.toString()}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "get_ad_account",
+    "Get detailed information about a specific ad account, including owner, funding source, creation time, and associated agencies.",
+    {
+      account_id: external_exports.string().describe("Ad account ID without the act_ prefix")
+    },
+    async (params) => {
+      try {
+        const fields = "id,name,account_id,account_status,currency,timezone_name,business,amount_spent,balance,spend_cap,business_name,age,created_time,end_advertiser,media_agency,partner,funding_source_details,is_personal,owner";
+        const result = await marketingFetch(`/act_${params.account_id}?fields=${encodeURIComponent(fields)}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "update_ad_account",
+    "Update settings of an ad account such as name, spend cap, or timezone.",
+    {
+      account_id: external_exports.string().describe("Ad account ID without the act_ prefix"),
+      name: external_exports.string().optional().describe("New name for the ad account"),
+      spend_cap: external_exports.number().optional().describe("Spend cap for the account in the account currency's smallest unit (e.g. cents for USD)"),
+      timezone_id: external_exports.number().optional().describe("Timezone ID for the ad account (see Facebook timezone IDs reference)")
+    },
+    async (params) => {
+      try {
+        const body = {};
+        if (params.name !== void 0) body.name = params.name;
+        if (params.spend_cap !== void 0) body.spend_cap = params.spend_cap;
+        if (params.timezone_id !== void 0) body.timezone_id = params.timezone_id;
+        const result = await marketingPost(`/act_${params.account_id}`, body);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "list_ad_account_users",
+    "List all users who have access to a specific ad account, including their roles and email addresses.",
+    {
+      account_id: external_exports.string().describe("Ad account ID without the act_ prefix"),
+      limit: external_exports.number().optional().default(25).describe("Maximum number of users to return (default 25)")
+    },
+    async (params) => {
+      try {
+        const query = new URLSearchParams({
+          fields: "id,name,role,email",
+          limit: String(params.limit)
+        });
+        const result = await marketingFetch(`/act_${params.account_id}/users?${query.toString()}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+}
+__name(registerAdAccountTools, "registerAdAccountTools");
+
+// src/tools/campaigns.ts
+function registerCampaignTools(server) {
+  server.tool(
+    "list_campaigns",
+    "List campaigns in an ad account with optional filtering by status",
+    {
+      account_id: external_exports.string().describe("The ad account ID (without act_ prefix)"),
+      limit: external_exports.number().optional().default(25).describe("Number of campaigns to return (default 25)"),
+      after: external_exports.string().optional().describe("Pagination cursor to fetch the next page of results"),
+      effective_status: external_exports.array(external_exports.string()).optional().describe("Filter by status: ACTIVE, PAUSED, DELETED, ARCHIVED"),
+      date_preset: external_exports.string().optional().describe("Date preset for time-based filtering, e.g. today, yesterday, last_7d, last_30d")
+    },
+    async (params) => {
+      try {
+        const query = new URLSearchParams();
+        query.set(
+          "fields",
+          "id,name,objective,status,effective_status,buying_type,daily_budget,lifetime_budget,budget_remaining,start_time,stop_time,created_time,updated_time,bid_strategy,special_ad_categories"
+        );
+        query.set("limit", String(params.limit));
+        if (params.after) query.set("after", params.after);
+        if (params.effective_status && params.effective_status.length > 0) {
+          query.set("effective_status", JSON.stringify(params.effective_status));
+        }
+        if (params.date_preset) query.set("date_preset", params.date_preset);
+        const result = await marketingFetch(`/act_${params.account_id}/campaigns?${query.toString()}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "get_campaign",
+    "Get details of a specific campaign by its ID",
+    {
+      campaign_id: external_exports.string().describe("The campaign ID")
+    },
+    async (params) => {
+      try {
+        const fields = "id,name,objective,status,effective_status,buying_type,daily_budget,lifetime_budget,budget_remaining,start_time,stop_time,created_time,updated_time,bid_strategy,special_ad_categories,spend_cap,budget_rebalance_flag";
+        const result = await marketingFetch(`/${params.campaign_id}?fields=${fields}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "create_campaign",
+    "Create a new campaign in an ad account",
+    {
+      account_id: external_exports.string().describe("The ad account ID (without act_ prefix)"),
+      name: external_exports.string().describe("Name of the campaign"),
+      objective: external_exports.string().describe(
+        "Campaign objective: OUTCOME_AWARENESS, OUTCOME_ENGAGEMENT, OUTCOME_LEADS, OUTCOME_SALES, OUTCOME_TRAFFIC, OUTCOME_APP_PROMOTION"
+      ),
+      status: external_exports.string().optional().default("PAUSED").describe("Initial campaign status: ACTIVE or PAUSED (default PAUSED)"),
+      special_ad_categories: external_exports.array(external_exports.string()).optional().describe(
+        "Special ad categories: NONE, EMPLOYMENT, HOUSING, CREDIT, ISSUES_ELECTIONS_POLITICS"
+      ),
+      daily_budget: external_exports.number().optional().describe("Daily budget in cents (e.g. 1000 = $10.00)"),
+      lifetime_budget: external_exports.number().optional().describe("Lifetime budget in cents (e.g. 5000 = $50.00)"),
+      bid_strategy: external_exports.string().optional().describe("Bid strategy: LOWEST_COST_WITHOUT_CAP, LOWEST_COST_WITH_BID_CAP, COST_CAP"),
+      buying_type: external_exports.string().optional().describe("Buying type: AUCTION or RESERVED")
+    },
+    async (params) => {
+      try {
+        const body = {
+          name: params.name,
+          objective: params.objective,
+          status: params.status
+        };
+        if (params.special_ad_categories) {
+          body.special_ad_categories = params.special_ad_categories;
+        }
+        if (params.daily_budget !== void 0) body.daily_budget = params.daily_budget;
+        if (params.lifetime_budget !== void 0) body.lifetime_budget = params.lifetime_budget;
+        if (params.bid_strategy) body.bid_strategy = params.bid_strategy;
+        if (params.buying_type) body.buying_type = params.buying_type;
+        const result = await marketingPost(`/act_${params.account_id}/campaigns`, body);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "update_campaign",
+    "Update an existing campaign's settings",
+    {
+      campaign_id: external_exports.string().describe("The campaign ID to update"),
+      name: external_exports.string().optional().describe("New campaign name"),
+      status: external_exports.string().optional().describe("New status: ACTIVE, PAUSED, DELETED, ARCHIVED"),
+      daily_budget: external_exports.number().optional().describe("New daily budget in cents"),
+      lifetime_budget: external_exports.number().optional().describe("New lifetime budget in cents"),
+      bid_strategy: external_exports.string().optional().describe("New bid strategy: LOWEST_COST_WITHOUT_CAP, LOWEST_COST_WITH_BID_CAP, COST_CAP"),
+      spend_cap: external_exports.number().optional().describe("Spend cap for the campaign in cents")
+    },
+    async (params) => {
+      try {
+        const body = {};
+        if (params.name !== void 0) body.name = params.name;
+        if (params.status !== void 0) body.status = params.status;
+        if (params.daily_budget !== void 0) body.daily_budget = params.daily_budget;
+        if (params.lifetime_budget !== void 0) body.lifetime_budget = params.lifetime_budget;
+        if (params.bid_strategy !== void 0) body.bid_strategy = params.bid_strategy;
+        if (params.spend_cap !== void 0) body.spend_cap = params.spend_cap;
+        const result = await marketingPost(`/${params.campaign_id}`, body);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "delete_campaign",
+    "Delete a campaign by its ID",
+    {
+      campaign_id: external_exports.string().describe("The campaign ID to delete")
+    },
+    async (params) => {
+      try {
+        const result = await marketingDelete(`/${params.campaign_id}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "duplicate_campaign",
+    "Duplicate an existing campaign, optionally including its ad sets and ads",
+    {
+      campaign_id: external_exports.string().describe("The campaign ID to duplicate"),
+      deep_copy: external_exports.boolean().optional().default(true).describe("If true, also copies ad sets and ads (default true)"),
+      status_option: external_exports.string().optional().describe("Status for the duplicated campaign: PAUSED or ACTIVE")
+    },
+    async (params) => {
+      try {
+        const body = {
+          deep_copy: params.deep_copy
+        };
+        if (params.status_option) body.status_option = params.status_option;
+        const result = await marketingPost(`/${params.campaign_id}/copies`, body);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+}
+__name(registerCampaignTools, "registerCampaignTools");
+
+// src/tools/ad-sets.ts
+var AD_SET_FIELDS = "id,name,campaign_id,status,effective_status,daily_budget,lifetime_budget,budget_remaining,bid_amount,bid_strategy,billing_event,optimization_goal,targeting,start_time,end_time,created_time,updated_time";
+var AD_SET_DETAIL_FIELDS = `${AD_SET_FIELDS},destination_type,promoted_object`;
+function registerAdSetTools(server) {
+  server.tool(
+    "list_ad_sets",
+    "List ad sets in an ad account or campaign. Provide either account_id or campaign_id.",
+    {
+      account_id: external_exports.string().optional().describe("Ad account ID (without act_ prefix). Provide this or campaign_id."),
+      campaign_id: external_exports.string().optional().describe("Filter by campaign. Provide either account_id or campaign_id."),
+      limit: external_exports.number().optional().default(25).describe("Maximum number of ad sets to return (default 25)"),
+      after: external_exports.string().optional().describe("Pagination cursor to fetch the next page of results"),
+      effective_status: external_exports.array(external_exports.string()).optional().describe('Filter by effective status, e.g. ["ACTIVE","PAUSED"]')
+    },
+    async (params) => {
+      try {
+        if (!params.account_id && !params.campaign_id) {
+          return { content: [{ type: "text", text: "Either account_id or campaign_id must be provided." }], isError: true };
+        }
+        const basePath = params.campaign_id ? `/${params.campaign_id}/adsets` : `/act_${params.account_id}/adsets`;
+        const qp = new URLSearchParams({ fields: AD_SET_FIELDS, limit: String(params.limit ?? 25) });
+        if (params.after) qp.set("after", params.after);
+        if (params.effective_status && params.effective_status.length > 0) {
+          qp.set("effective_status", JSON.stringify(params.effective_status));
+        }
+        const result = await marketingFetch(`${basePath}?${qp.toString()}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "get_ad_set",
+    "Get details of a specific ad set including targeting, budget, and status information.",
+    {
+      adset_id: external_exports.string().describe("The ID of the ad set to retrieve")
+    },
+    async (params) => {
+      try {
+        const result = await marketingFetch(`/${params.adset_id}?fields=${AD_SET_DETAIL_FIELDS}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "create_ad_set",
+    "Create a new ad set within a campaign. Budgets are specified in cents (e.g. 5000 = $50.00).",
+    {
+      account_id: external_exports.string().describe("Ad account ID (without act_ prefix)"),
+      name: external_exports.string().describe("Name of the ad set"),
+      campaign_id: external_exports.string().describe("The campaign ID this ad set belongs to"),
+      status: external_exports.string().optional().default("PAUSED").describe("Initial status: ACTIVE or PAUSED (default PAUSED)"),
+      daily_budget: external_exports.number().optional().describe("Daily budget in cents (e.g. 5000 = $50.00). Provide either daily_budget or lifetime_budget."),
+      lifetime_budget: external_exports.number().optional().describe("Lifetime budget in cents (e.g. 100000 = $1000.00). Provide either daily_budget or lifetime_budget."),
+      bid_amount: external_exports.number().optional().describe("Bid amount in cents"),
+      bid_strategy: external_exports.string().optional().describe("Bid strategy: LOWEST_COST_WITHOUT_CAP, LOWEST_COST_WITH_BID_CAP, COST_CAP"),
+      billing_event: external_exports.string().describe("Billing event: IMPRESSIONS, LINK_CLICKS, POST_ENGAGEMENT, PAGE_LIKES, APP_INSTALLS"),
+      optimization_goal: external_exports.string().describe("Optimization goal: LINK_CLICKS, IMPRESSIONS, REACH, LANDING_PAGE_VIEWS, POST_ENGAGEMENT, LEAD_GENERATION, CONVERSIONS"),
+      targeting: external_exports.string().describe('JSON string of targeting spec, e.g. {"geo_locations":{"countries":["AU"]},"age_min":18,"age_max":65}'),
+      start_time: external_exports.string().optional().describe("Start time in ISO 8601 format, e.g. 2025-01-01T00:00:00+0000"),
+      end_time: external_exports.string().optional().describe("End time in ISO 8601 format (required when using lifetime_budget)"),
+      promoted_object: external_exports.string().optional().describe('JSON string of promoted object, e.g. {"page_id":"123456"}')
+    },
+    async (params) => {
+      try {
+        let targetingObj;
+        try {
+          targetingObj = JSON.parse(params.targeting);
+        } catch {
+          return { content: [{ type: "text", text: "Invalid JSON in targeting parameter." }], isError: true };
+        }
+        const body = {
+          name: params.name,
+          campaign_id: params.campaign_id,
+          status: params.status ?? "PAUSED",
+          billing_event: params.billing_event,
+          optimization_goal: params.optimization_goal,
+          targeting: JSON.stringify(targetingObj)
+        };
+        if (params.daily_budget !== void 0) body.daily_budget = params.daily_budget;
+        if (params.lifetime_budget !== void 0) body.lifetime_budget = params.lifetime_budget;
+        if (params.bid_amount !== void 0) body.bid_amount = params.bid_amount;
+        if (params.bid_strategy) body.bid_strategy = params.bid_strategy;
+        if (params.start_time) body.start_time = params.start_time;
+        if (params.end_time) body.end_time = params.end_time;
+        if (params.promoted_object) {
+          try {
+            JSON.parse(params.promoted_object);
+            body.promoted_object = params.promoted_object;
+          } catch {
+            return { content: [{ type: "text", text: "Invalid JSON in promoted_object parameter." }], isError: true };
+          }
+        }
+        const result = await marketingPost(`/act_${params.account_id}/adsets`, body);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "update_ad_set",
+    "Update an existing ad set's name, status, budget, targeting, or schedule.",
+    {
+      adset_id: external_exports.string().describe("The ID of the ad set to update"),
+      name: external_exports.string().optional().describe("New name for the ad set"),
+      status: external_exports.string().optional().describe("New status: ACTIVE, PAUSED, ARCHIVED"),
+      daily_budget: external_exports.number().optional().describe("New daily budget in cents"),
+      lifetime_budget: external_exports.number().optional().describe("New lifetime budget in cents"),
+      bid_amount: external_exports.number().optional().describe("New bid amount in cents"),
+      targeting: external_exports.string().optional().describe('JSON string of new targeting spec, e.g. {"geo_locations":{"countries":["AU"]},"age_min":18,"age_max":65}'),
+      start_time: external_exports.string().optional().describe("New start time in ISO 8601 format"),
+      end_time: external_exports.string().optional().describe("New end time in ISO 8601 format")
+    },
+    async (params) => {
+      try {
+        const body = {};
+        if (params.name !== void 0) body.name = params.name;
+        if (params.status !== void 0) body.status = params.status;
+        if (params.daily_budget !== void 0) body.daily_budget = params.daily_budget;
+        if (params.lifetime_budget !== void 0) body.lifetime_budget = params.lifetime_budget;
+        if (params.bid_amount !== void 0) body.bid_amount = params.bid_amount;
+        if (params.start_time !== void 0) body.start_time = params.start_time;
+        if (params.end_time !== void 0) body.end_time = params.end_time;
+        if (params.targeting !== void 0) {
+          try {
+            const targetingObj = JSON.parse(params.targeting);
+            body.targeting = JSON.stringify(targetingObj);
+          } catch {
+            return { content: [{ type: "text", text: "Invalid JSON in targeting parameter." }], isError: true };
+          }
+        }
+        const result = await marketingPost(`/${params.adset_id}`, body);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "delete_ad_set",
+    "Delete an ad set. This action cannot be undone.",
+    {
+      adset_id: external_exports.string().describe("The ID of the ad set to delete")
+    },
+    async (params) => {
+      try {
+        const result = await marketingDelete(`/${params.adset_id}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "duplicate_ad_set",
+    "Duplicate an ad set, optionally into a different campaign.",
+    {
+      adset_id: external_exports.string().describe("The ID of the ad set to duplicate"),
+      campaign_id: external_exports.string().optional().describe("Target campaign ID for the copy. If omitted, duplicates within the same campaign."),
+      deep_copy: external_exports.boolean().optional().default(true).describe("Whether to deep copy the ads within the ad set (default true)"),
+      status_option: external_exports.string().optional().describe("Status for the new ad set: ACTIVE, PAUSED, INHERITED_FROM_SOURCE")
+    },
+    async (params) => {
+      try {
+        const body = {
+          deep_copy: params.deep_copy ?? true
+        };
+        if (params.campaign_id) body.campaign_id = params.campaign_id;
+        if (params.status_option) body.status_option = params.status_option;
+        const result = await marketingPost(`/${params.adset_id}/copies`, body);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+}
+__name(registerAdSetTools, "registerAdSetTools");
+
+// src/tools/ads.ts
+function registerAdTools(server) {
+  server.tool(
+    "list_ads",
+    "List ads in an ad account, campaign, or ad set. Provide one of account_id, adset_id, or campaign_id.",
+    {
+      account_id: external_exports.string().optional().describe("Ad account ID (without act_ prefix). Provide one of account_id, adset_id, or campaign_id."),
+      adset_id: external_exports.string().optional().describe("Ad set ID to list ads for"),
+      campaign_id: external_exports.string().optional().describe("Campaign ID to list ads for"),
+      limit: external_exports.number().optional().default(25).describe("Maximum number of ads to return (default 25)"),
+      after: external_exports.string().optional().describe("Pagination cursor to fetch the next page of results"),
+      effective_status: external_exports.array(external_exports.string()).optional().describe("Filter by effective status, e.g. ['ACTIVE','PAUSED']")
+    },
+    async (params) => {
+      try {
+        let endpoint;
+        if (params.adset_id) {
+          endpoint = `/${params.adset_id}/ads`;
+        } else if (params.campaign_id) {
+          endpoint = `/${params.campaign_id}/ads`;
+        } else if (params.account_id) {
+          endpoint = `/act_${params.account_id}/ads`;
+        } else {
+          return { content: [{ type: "text", text: "Error: Provide one of account_id, adset_id, or campaign_id" }], isError: true };
+        }
+        const queryParams = new URLSearchParams();
+        queryParams.set("fields", "id,name,adset_id,campaign_id,status,effective_status,creative,created_time,updated_time,tracking_specs,conversion_specs");
+        queryParams.set("limit", String(params.limit ?? 25));
+        if (params.after) queryParams.set("after", params.after);
+        if (params.effective_status && params.effective_status.length > 0) {
+          queryParams.set("effective_status", JSON.stringify(params.effective_status));
+        }
+        const result = await marketingFetch(`${endpoint}?${queryParams.toString()}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "get_ad",
+    "Get details of a specific ad by its ID",
+    {
+      ad_id: external_exports.string().describe("The ID of the ad to retrieve")
+    },
+    async (params) => {
+      try {
+        const fields = "id,name,adset_id,campaign_id,status,effective_status,creative,created_time,updated_time,tracking_specs,conversion_specs,bid_amount,source_ad_id";
+        const result = await marketingFetch(`/${params.ad_id}?fields=${fields}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "create_ad",
+    "Create a new ad in the specified ad account",
+    {
+      account_id: external_exports.string().describe("Ad account ID (without act_ prefix)"),
+      name: external_exports.string().describe("Name of the ad"),
+      adset_id: external_exports.string().describe("ID of the ad set this ad belongs to"),
+      creative_id: external_exports.string().describe("ID of the ad creative to use"),
+      status: external_exports.string().optional().default("PAUSED").describe("Initial status of the ad: ACTIVE or PAUSED (default PAUSED)"),
+      tracking_specs: external_exports.string().optional().describe("JSON string of tracking specs"),
+      conversion_domain: external_exports.string().optional().describe("Conversion domain for the ad")
+    },
+    async (params) => {
+      try {
+        const body = {
+          name: params.name,
+          adset_id: params.adset_id,
+          creative: JSON.stringify({ creative_id: params.creative_id }),
+          status: params.status ?? "PAUSED"
+        };
+        if (params.tracking_specs) body.tracking_specs = params.tracking_specs;
+        if (params.conversion_domain) body.conversion_domain = params.conversion_domain;
+        const result = await marketingPost(`/act_${params.account_id}/ads`, body);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "update_ad",
+    "Update an existing ad's properties",
+    {
+      ad_id: external_exports.string().describe("The ID of the ad to update"),
+      name: external_exports.string().optional().describe("New name for the ad"),
+      status: external_exports.string().optional().describe("New status: ACTIVE, PAUSED, DELETED, ARCHIVED"),
+      creative_id: external_exports.string().optional().describe("New creative ID to use for the ad"),
+      bid_amount: external_exports.number().optional().describe("Bid amount in cents for the ad")
+    },
+    async (params) => {
+      try {
+        const body = {};
+        if (params.name) body.name = params.name;
+        if (params.status) body.status = params.status;
+        if (params.creative_id) body.creative = JSON.stringify({ creative_id: params.creative_id });
+        if (params.bid_amount !== void 0) body.bid_amount = params.bid_amount;
+        const result = await marketingPost(`/${params.ad_id}`, body);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "delete_ad",
+    "Delete an ad by its ID",
+    {
+      ad_id: external_exports.string().describe("The ID of the ad to delete")
+    },
+    async (params) => {
+      try {
+        const result = await marketingDelete(`/${params.ad_id}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "get_ad_preview",
+    "Generate a preview of an ad in a specified format",
+    {
+      ad_id: external_exports.string().describe("The ID of the ad to preview"),
+      ad_format: external_exports.string().describe("Preview format: DESKTOP_FEED_STANDARD, MOBILE_FEED_STANDARD, RIGHT_COLUMN_STANDARD, INSTAGRAM_STANDARD, INSTAGRAM_STORY, AUDIENCE_NETWORK_OUTSTREAM_VIDEO")
+    },
+    async (params) => {
+      try {
+        const result = await marketingFetch(`/${params.ad_id}/previews?ad_format=${encodeURIComponent(params.ad_format)}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+}
+__name(registerAdTools, "registerAdTools");
+
+// src/tools/ad-creatives.ts
+function registerAdCreativeTools(server) {
+  server.tool(
+    "list_ad_creatives",
+    "List ad creatives in a Facebook ad account",
+    {
+      account_id: external_exports.string().describe("The ad account ID (without act_ prefix)"),
+      limit: external_exports.number().optional().default(25).describe("Number of results to return (default 25)"),
+      after: external_exports.string().optional().describe("Pagination cursor to fetch the next page of results")
+    },
+    async (params) => {
+      try {
+        const fields = "id,name,title,body,image_url,image_hash,thumbnail_url,object_story_spec,url_tags,call_to_action_type,link_url,status,effective_object_story_id";
+        const queryParams = {
+          fields,
+          limit: String(params.limit)
+        };
+        if (params.after) {
+          queryParams.after = params.after;
+        }
+        const qs = new URLSearchParams(queryParams).toString();
+        const result = await marketingFetch(`/act_${params.account_id}/adcreatives?${qs}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "get_ad_creative",
+    "Get details of a specific ad creative by ID",
+    {
+      creative_id: external_exports.string().describe("The ad creative ID")
+    },
+    async (params) => {
+      try {
+        const fields = "id,name,title,body,image_url,image_hash,thumbnail_url,object_story_spec,url_tags,call_to_action_type,link_url,status,effective_object_story_id,object_type,asset_feed_spec";
+        const result = await marketingFetch(`/${params.creative_id}?fields=${fields}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "create_ad_creative",
+    "Create a new ad creative in a Facebook ad account",
+    {
+      account_id: external_exports.string().describe("The ad account ID (without act_ prefix)"),
+      name: external_exports.string().describe("Name of the ad creative"),
+      object_story_spec: external_exports.string().describe(
+        'JSON string of the ad creative spec. Example for link ad: {"page_id":"PAGE_ID","link_data":{"link":"https://example.com","message":"Check this out!","name":"Ad Title","description":"Ad description","image_hash":"IMAGE_HASH","call_to_action":{"type":"LEARN_MORE"}}}'
+      ),
+      url_tags: external_exports.string().optional().describe("URL tags for tracking"),
+      asset_feed_spec: external_exports.string().optional().describe("JSON string for dynamic creative asset feed")
+    },
+    async (params) => {
+      try {
+        const body = {
+          name: params.name,
+          object_story_spec: JSON.parse(params.object_story_spec)
+        };
+        if (params.url_tags) {
+          body.url_tags = params.url_tags;
+        }
+        if (params.asset_feed_spec) {
+          body.asset_feed_spec = JSON.parse(params.asset_feed_spec);
+        }
+        const result = await marketingPost(`/act_${params.account_id}/adcreatives`, body);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "update_ad_creative",
+    "Update an existing ad creative",
+    {
+      creative_id: external_exports.string().describe("The ad creative ID to update"),
+      name: external_exports.string().optional().describe("New name for the ad creative"),
+      url_tags: external_exports.string().optional().describe("Updated URL tags for tracking"),
+      status: external_exports.string().optional().describe("New status for the ad creative (e.g. ACTIVE, PAUSED)")
+    },
+    async (params) => {
+      try {
+        const body = {};
+        if (params.name) body.name = params.name;
+        if (params.url_tags) body.url_tags = params.url_tags;
+        if (params.status) body.status = params.status;
+        const result = await marketingPost(`/${params.creative_id}`, body);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "preview_ad_creative",
+    "Generate a preview of an ad creative in a specific format",
+    {
+      creative_id: external_exports.string().describe("The ad creative ID to preview"),
+      ad_format: external_exports.string().describe("Preview format: DESKTOP_FEED_STANDARD, MOBILE_FEED_STANDARD, RIGHT_COLUMN_STANDARD, INSTAGRAM_STANDARD, INSTAGRAM_STORY")
+    },
+    async (params) => {
+      try {
+        const result = await marketingFetch(`/${params.creative_id}/previews?ad_format=${encodeURIComponent(params.ad_format)}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+}
+__name(registerAdCreativeTools, "registerAdCreativeTools");
+
+// src/tools/ad-images.ts
+function registerAdImageTools(server) {
+  server.tool(
+    "list_ad_images",
+    "List images in an ad account's image library",
+    {
+      account_id: external_exports.string().describe("The ad account ID (without act_ prefix)"),
+      limit: external_exports.number().optional().default(25).describe("Maximum number of images to return (default 25)"),
+      after: external_exports.string().optional().describe("Pagination cursor to fetch the next page of results"),
+      hashes: external_exports.array(external_exports.string()).optional().describe("Filter by specific image hashes")
+    },
+    async (params) => {
+      try {
+        const query = new URLSearchParams({
+          fields: "id,name,hash,url,url_128,created_time,updated_time,status,width,height",
+          limit: String(params.limit)
+        });
+        if (params.after) query.set("after", params.after);
+        if (params.hashes && params.hashes.length > 0) {
+          query.set("hashes", JSON.stringify(params.hashes));
+        }
+        const result = await marketingFetch(
+          `act_${params.account_id}/adimages?${query.toString()}`
+        );
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "get_ad_image",
+    "Get a specific ad image by its hash",
+    {
+      account_id: external_exports.string().describe("The ad account ID (without act_ prefix)"),
+      image_hash: external_exports.string().describe("The hash of the ad image to retrieve")
+    },
+    async (params) => {
+      try {
+        const query = new URLSearchParams({
+          hashes: JSON.stringify([params.image_hash]),
+          fields: "id,name,hash,url,url_128,created_time,status,width,height"
+        });
+        const result = await marketingFetch(
+          `act_${params.account_id}/adimages?${query.toString()}`
+        );
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "upload_ad_image",
+    "Upload an image to the ad account image library from a public URL",
+    {
+      account_id: external_exports.string().describe("The ad account ID (without act_ prefix)"),
+      image_url: external_exports.string().describe("Public URL of the image to upload")
+    },
+    async (params) => {
+      try {
+        const result = await marketingPost(
+          `act_${params.account_id}/adimages`,
+          { url: params.image_url }
+        );
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "delete_ad_image",
+    "Delete an image from the ad account image library",
+    {
+      account_id: external_exports.string().describe("The ad account ID (without act_ prefix)"),
+      image_hash: external_exports.string().describe("The hash of the ad image to delete")
+    },
+    async (params) => {
+      try {
+        const query = new URLSearchParams({ hash: params.image_hash });
+        const result = await marketingDelete(
+          `act_${params.account_id}/adimages?${query.toString()}`
+        );
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+}
+__name(registerAdImageTools, "registerAdImageTools");
+
+// src/tools/ad-videos.ts
+function registerAdVideoTools(server) {
+  server.tool(
+    "list_ad_videos",
+    "List videos in an ad account",
+    {
+      account_id: external_exports.string().describe("The ad account ID (without act_ prefix)"),
+      limit: external_exports.number().optional().default(25).describe("Maximum number of videos to return (default 25)"),
+      after: external_exports.string().optional().describe("Pagination cursor to fetch the next page of results")
+    },
+    async (params) => {
+      try {
+        const queryParams = new URLSearchParams({
+          fields: "id,title,description,source,picture,created_time,updated_time,length,status",
+          limit: String(params.limit)
+        });
+        if (params.after) {
+          queryParams.set("after", params.after);
+        }
+        const result = await marketingFetch(
+          `act_${params.account_id}/advideos?${queryParams.toString()}`
+        );
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "get_ad_video",
+    "Get details of a specific ad video",
+    {
+      video_id: external_exports.string().describe("The ID of the video to retrieve")
+    },
+    async (params) => {
+      try {
+        const queryParams = new URLSearchParams({
+          fields: "id,title,description,source,picture,created_time,updated_time,length,status,thumbnails"
+        });
+        const result = await marketingFetch(
+          `${params.video_id}?${queryParams.toString()}`
+        );
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "upload_ad_video",
+    "Upload a video to the ad account from a public URL",
+    {
+      account_id: external_exports.string().describe("The ad account ID (without act_ prefix)"),
+      file_url: external_exports.string().describe("Public URL of the video file"),
+      title: external_exports.string().optional().describe("Title for the video"),
+      description: external_exports.string().optional().describe("Description for the video")
+    },
+    async (params) => {
+      try {
+        const body = {
+          file_url: params.file_url
+        };
+        if (params.title) {
+          body.title = params.title;
+        }
+        if (params.description) {
+          body.description = params.description;
+        }
+        const result = await marketingPost(
+          `act_${params.account_id}/advideos`,
+          body
+        );
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+}
+__name(registerAdVideoTools, "registerAdVideoTools");
+
+// src/tools/audiences.ts
+var AUDIENCE_FIELDS = "id,name,description,subtype,approximate_count,data_source,delivery_status,operation_status,permission_for_actions,time_created,time_updated";
+var AUDIENCE_DETAIL_FIELDS = `${AUDIENCE_FIELDS},rule,lookalike_spec`;
+function registerAudienceTools(server) {
+  server.tool(
+    "list_custom_audiences",
+    "List custom audiences in an ad account",
+    {
+      account_id: external_exports.string().describe("Ad account ID (without act_ prefix)"),
+      limit: external_exports.number().optional().default(25).describe("Number of audiences to return (default 25)"),
+      after: external_exports.string().optional().describe("Pagination cursor to fetch the next page of results")
+    },
+    async (params) => {
+      try {
+        const qs = new URLSearchParams({
+          fields: AUDIENCE_FIELDS,
+          limit: String(params.limit)
+        });
+        if (params.after) qs.set("after", params.after);
+        const result = await marketingFetch(`/act_${params.account_id}/customaudiences?${qs.toString()}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "get_custom_audience",
+    "Get details of a custom audience",
+    {
+      audience_id: external_exports.string().describe("The custom audience ID")
+    },
+    async (params) => {
+      try {
+        const qs = new URLSearchParams({ fields: AUDIENCE_DETAIL_FIELDS });
+        const result = await marketingFetch(`/${params.audience_id}?${qs.toString()}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "create_custom_audience",
+    "Create a custom audience",
+    {
+      account_id: external_exports.string().describe("Ad account ID (without act_ prefix)"),
+      name: external_exports.string().describe("Name of the custom audience"),
+      description: external_exports.string().optional().describe("Description of the custom audience"),
+      subtype: external_exports.string().describe("Audience subtype: CUSTOM, WEBSITE, APP, OFFLINE_CONVERSION, CLAIM, PARTNER, MANAGED, VIDEO, LOOKALIKE, ENGAGEMENT"),
+      customer_file_source: external_exports.string().optional().describe("Source of customer data: USER_PROVIDED_ONLY, PARTNER_PROVIDED_ONLY, BOTH_USER_AND_PARTNER_PROVIDED"),
+      rule: external_exports.string().optional().describe("JSON string defining the audience rule for website/app audiences")
+    },
+    async (params) => {
+      try {
+        const body = {
+          name: params.name,
+          subtype: params.subtype
+        };
+        if (params.description) body.description = params.description;
+        if (params.customer_file_source) body.customer_file_source = params.customer_file_source;
+        if (params.rule) {
+          try {
+            body.rule = JSON.parse(params.rule);
+          } catch {
+            return { content: [{ type: "text", text: "Invalid JSON in 'rule' parameter" }], isError: true };
+          }
+        }
+        const result = await marketingPost(`/act_${params.account_id}/customaudiences`, body);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "update_custom_audience",
+    "Update a custom audience",
+    {
+      audience_id: external_exports.string().describe("The custom audience ID to update"),
+      name: external_exports.string().optional().describe("New name for the custom audience"),
+      description: external_exports.string().optional().describe("New description for the custom audience")
+    },
+    async (params) => {
+      try {
+        const body = {};
+        if (params.name) body.name = params.name;
+        if (params.description) body.description = params.description;
+        const result = await marketingPost(`/${params.audience_id}`, body);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "delete_custom_audience",
+    "Delete a custom audience",
+    {
+      audience_id: external_exports.string().describe("The custom audience ID to delete")
+    },
+    async (params) => {
+      try {
+        const result = await marketingDelete(`/${params.audience_id}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "create_lookalike_audience",
+    "Create a lookalike audience from a source audience",
+    {
+      account_id: external_exports.string().describe("Ad account ID (without act_ prefix)"),
+      name: external_exports.string().describe("Name for the lookalike audience"),
+      origin_audience_id: external_exports.string().describe("Source custom audience ID"),
+      lookalike_spec: external_exports.string().describe('JSON string, e.g. {"type":"similarity","starting_ratio":0,"ratio":0.01,"country":"AU"}')
+    },
+    async (params) => {
+      try {
+        let parsedSpec;
+        try {
+          parsedSpec = JSON.parse(params.lookalike_spec);
+        } catch {
+          return { content: [{ type: "text", text: "Invalid JSON in 'lookalike_spec' parameter" }], isError: true };
+        }
+        const body = {
+          name: params.name,
+          subtype: "LOOKALIKE",
+          origin_audience_id: params.origin_audience_id,
+          lookalike_spec: parsedSpec
+        };
+        const result = await marketingPost(`/act_${params.account_id}/customaudiences`, body);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+}
+__name(registerAudienceTools, "registerAudienceTools");
+
+// src/tools/ad-insights.ts
+var INSIGHTS_FIELDS = "impressions,reach,frequency,spend,clicks,cpc,cpm,ctr,cpp,actions,conversions,cost_per_action_type,cost_per_conversion,purchase_roas,website_ctr,social_spend";
+var commonInsightParams = {
+  date_preset: external_exports.string().optional().describe(
+    "today, yesterday, this_month, last_month, this_quarter, last_3d, last_7d, last_14d, last_28d, last_30d, last_90d, last_week_mon_sun, last_week_sun_sat, last_quarter, last_year, this_year, lifetime"
+  ),
+  time_range_since: external_exports.string().optional().describe("Start date YYYY-MM-DD, use with time_range_until"),
+  time_range_until: external_exports.string().optional().describe("End date YYYY-MM-DD, use with time_range_since"),
+  level: external_exports.string().optional().describe("account, campaign, adset, ad"),
+  breakdowns: external_exports.array(external_exports.string()).optional().describe(
+    "age, gender, country, region, dma, impression_device, platform_position, publisher_platform, device_platform"
+  ),
+  limit: external_exports.number().optional().default(25).describe("Number of results to return (default 25)"),
+  after: external_exports.string().optional().describe("Pagination cursor for next page of results")
+};
+function buildInsightsQs(params) {
+  const qs = new URLSearchParams();
+  qs.set("fields", INSIGHTS_FIELDS);
+  if (params.date_preset) qs.set("date_preset", params.date_preset);
+  if (params.time_range_since && params.time_range_until) {
+    qs.set(
+      "time_range",
+      JSON.stringify({ since: params.time_range_since, until: params.time_range_until })
+    );
+  }
+  if (params.level) qs.set("level", params.level);
+  if (params.breakdowns) qs.set("breakdowns", params.breakdowns.join(","));
+  if (params.limit) qs.set("limit", String(params.limit));
+  if (params.after) qs.set("after", params.after);
+  return qs;
+}
+__name(buildInsightsQs, "buildInsightsQs");
+function registerAdInsightTools(server) {
+  server.tool(
+    "get_account_insights",
+    "Get insights for an ad account including spend, reach, impressions, clicks, conversions and ROAS",
+    {
+      account_id: external_exports.string().describe("The ad account ID (without act_ prefix)"),
+      ...commonInsightParams
+    },
+    async (params) => {
+      try {
+        const qs = buildInsightsQs(params);
+        const result = await marketingFetch(`act_${params.account_id}/insights?${qs.toString()}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "get_campaign_insights",
+    "Get insights for a specific campaign including spend, reach, impressions, clicks, conversions and ROAS",
+    {
+      campaign_id: external_exports.string().describe("The campaign ID"),
+      ...commonInsightParams
+    },
+    async (params) => {
+      try {
+        const qs = buildInsightsQs(params);
+        const result = await marketingFetch(`${params.campaign_id}/insights?${qs.toString()}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "get_adset_insights",
+    "Get insights for a specific ad set including spend, reach, impressions, clicks, conversions and ROAS",
+    {
+      adset_id: external_exports.string().describe("The ad set ID"),
+      ...commonInsightParams
+    },
+    async (params) => {
+      try {
+        const qs = buildInsightsQs(params);
+        const result = await marketingFetch(`${params.adset_id}/insights?${qs.toString()}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "get_ad_insights",
+    "Get insights for a specific ad including spend, reach, impressions, clicks, conversions and ROAS",
+    {
+      ad_id: external_exports.string().describe("The ad ID"),
+      ...commonInsightParams
+    },
+    async (params) => {
+      try {
+        const qs = buildInsightsQs(params);
+        const result = await marketingFetch(`${params.ad_id}/insights?${qs.toString()}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "get_insights_report",
+    "Get a cross-object insights report with full breakdown across all campaigns, ad sets, or ads in an account",
+    {
+      account_id: external_exports.string().describe("The ad account ID (without act_ prefix)"),
+      ...commonInsightParams,
+      level: external_exports.string().describe("Aggregation level: campaign, adset, or ad")
+    },
+    async (params) => {
+      try {
+        const qs = buildInsightsQs(params);
+        qs.set("level", params.level);
+        const result = await marketingFetch(`act_${params.account_id}/insights?${qs.toString()}`);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+}
+__name(registerAdInsightTools, "registerAdInsightTools");
+
+// src/tools/ad-rules.ts
+function registerAdRuleTools(server) {
+  server.tool(
+    "list_ad_rules",
+    "List automated rules in an ad account",
+    {
+      account_id: external_exports.string().describe("The ad account ID (without act_ prefix)"),
+      limit: external_exports.number().optional().default(25).describe("Maximum number of rules to return (default 25)"),
+      after: external_exports.string().optional().describe("Pagination cursor to fetch the next page of results")
+    },
+    async (params) => {
+      try {
+        const queryParams = new URLSearchParams({
+          fields: "id,name,status,evaluation_spec,execution_spec,schedule_spec,created_time,updated_time",
+          limit: String(params.limit)
+        });
+        if (params.after) {
+          queryParams.set("after", params.after);
+        }
+        const result = await marketingFetch(
+          `act_${params.account_id}/adrules_library?${queryParams.toString()}`
+        );
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "get_ad_rule",
+    "Get details of a specific ad rule",
+    {
+      rule_id: external_exports.string().describe("The ID of the ad rule to retrieve")
+    },
+    async (params) => {
+      try {
+        const queryParams = new URLSearchParams({
+          fields: "id,name,status,evaluation_spec,execution_spec,schedule_spec,created_time,updated_time,entity_type"
+        });
+        const result = await marketingFetch(
+          `${params.rule_id}?${queryParams.toString()}`
+        );
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "create_ad_rule",
+    "Create an automated ad rule in an ad account",
+    {
+      account_id: external_exports.string().describe("The ad account ID (without act_ prefix)"),
+      name: external_exports.string().describe("Name of the automated rule"),
+      evaluation_spec: external_exports.string().describe(
+        'JSON string defining when the rule triggers. Example: {"evaluation_type":"TRIGGER","filters":[{"field":"spent","value":1000,"operator":"GREATER_THAN"}]}'
+      ),
+      execution_spec: external_exports.string().describe(
+        'JSON string defining what happens when the rule triggers. Example: {"execution_type":"PAUSE"}'
+      ),
+      schedule_spec: external_exports.string().optional().describe(
+        'JSON string for the rule schedule. Example: {"schedule_type":"DAILY"}'
+      ),
+      entity_type: external_exports.string().optional().describe("The entity type the rule applies to: CAMPAIGN, ADSET, or AD")
+    },
+    async (params) => {
+      try {
+        const body = {
+          name: params.name,
+          evaluation_spec: JSON.parse(params.evaluation_spec),
+          execution_spec: JSON.parse(params.execution_spec)
+        };
+        if (params.schedule_spec) {
+          body.schedule_spec = JSON.parse(params.schedule_spec);
+        }
+        if (params.entity_type) {
+          body.entity_type = params.entity_type;
+        }
+        const result = await marketingPost(
+          `act_${params.account_id}/adrules_library`,
+          body
+        );
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+  server.tool(
+    "delete_ad_rule",
+    "Delete an ad rule",
+    {
+      rule_id: external_exports.string().describe("The ID of the ad rule to delete")
+    },
+    async (params) => {
+      try {
+        const result = await marketingDelete(params.rule_id);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (e) {
+        return { content: [{ type: "text", text: String(e) }], isError: true };
+      }
+    }
+  );
+}
+__name(registerAdRuleTools, "registerAdRuleTools");
+
 // src/index.ts
-var TOOL_COUNT = 71;
+var TOOL_COUNT = 120;
 function createServer() {
   const server = new McpServer({
     name: "facebook-mcp-server",
@@ -48640,6 +49890,16 @@ function createServer() {
   registerEventTools(server);
   registerUserTools(server);
   registerRatingTools(server);
+  registerAdAccountTools(server);
+  registerCampaignTools(server);
+  registerAdSetTools(server);
+  registerAdTools(server);
+  registerAdCreativeTools(server);
+  registerAdImageTools(server);
+  registerAdVideoTools(server);
+  registerAudienceTools(server);
+  registerAdInsightTools(server);
+  registerAdRuleTools(server);
   return server;
 }
 __name(createServer, "createServer");
@@ -48827,6 +50087,9 @@ type-is/index.js:
    *)
 
 body-parser/lib/read.js:
+body-parser/lib/types/raw.js:
+body-parser/lib/types/text.js:
+body-parser/index.js:
   (*!
    * body-parser
    * Copyright(c) 2014-2015 Douglas Christopher Wilson
@@ -48834,38 +50097,10 @@ body-parser/lib/read.js:
    *)
 
 body-parser/lib/types/json.js:
-  (*!
-   * body-parser
-   * Copyright(c) 2014 Jonathan Ong
-   * Copyright(c) 2014-2015 Douglas Christopher Wilson
-   * MIT Licensed
-   *)
-
-body-parser/lib/types/raw.js:
-  (*!
-   * body-parser
-   * Copyright(c) 2014-2015 Douglas Christopher Wilson
-   * MIT Licensed
-   *)
-
-body-parser/lib/types/text.js:
-  (*!
-   * body-parser
-   * Copyright(c) 2014-2015 Douglas Christopher Wilson
-   * MIT Licensed
-   *)
-
 body-parser/lib/types/urlencoded.js:
   (*!
    * body-parser
    * Copyright(c) 2014 Jonathan Ong
-   * Copyright(c) 2014-2015 Douglas Christopher Wilson
-   * MIT Licensed
-   *)
-
-body-parser/index.js:
-  (*!
-   * body-parser
    * Copyright(c) 2014-2015 Douglas Christopher Wilson
    * MIT Licensed
    *)
@@ -48902,6 +50137,10 @@ finalhandler/index.js:
    *)
 
 express/lib/view.js:
+express/lib/application.js:
+express/lib/request.js:
+express/lib/express.js:
+express/index.js:
   (*!
    * express
    * Copyright(c) 2009-2013 TJ Holowaychuk
@@ -48932,6 +50171,7 @@ proxy-addr/index.js:
    *)
 
 express/lib/utils.js:
+express/lib/response.js:
   (*!
    * express
    * Copyright(c) 2009-2013 TJ Holowaychuk
@@ -48940,35 +50180,12 @@ express/lib/utils.js:
    *)
 
 router/lib/layer.js:
-  (*!
-   * router
-   * Copyright(c) 2013 Roman Shtylman
-   * Copyright(c) 2014-2022 Douglas Christopher Wilson
-   * MIT Licensed
-   *)
-
 router/lib/route.js:
-  (*!
-   * router
-   * Copyright(c) 2013 Roman Shtylman
-   * Copyright(c) 2014-2022 Douglas Christopher Wilson
-   * MIT Licensed
-   *)
-
 router/index.js:
   (*!
    * router
    * Copyright(c) 2013 Roman Shtylman
    * Copyright(c) 2014-2022 Douglas Christopher Wilson
-   * MIT Licensed
-   *)
-
-express/lib/application.js:
-  (*!
-   * express
-   * Copyright(c) 2009-2013 TJ Holowaychuk
-   * Copyright(c) 2013 Roman Shtylman
-   * Copyright(c) 2014-2015 Douglas Christopher Wilson
    * MIT Licensed
    *)
 
@@ -49005,15 +50222,6 @@ range-parser/index.js:
    * MIT Licensed
    *)
 
-express/lib/request.js:
-  (*!
-   * express
-   * Copyright(c) 2009-2013 TJ Holowaychuk
-   * Copyright(c) 2013 Roman Shtylman
-   * Copyright(c) 2014-2015 Douglas Christopher Wilson
-   * MIT Licensed
-   *)
-
 content-disposition/index.js:
   (*!
    * content-disposition
@@ -49044,38 +50252,12 @@ vary/index.js:
    * MIT Licensed
    *)
 
-express/lib/response.js:
-  (*!
-   * express
-   * Copyright(c) 2009-2013 TJ Holowaychuk
-   * Copyright(c) 2014-2015 Douglas Christopher Wilson
-   * MIT Licensed
-   *)
-
 serve-static/index.js:
   (*!
    * serve-static
    * Copyright(c) 2010 Sencha Inc.
    * Copyright(c) 2011 TJ Holowaychuk
    * Copyright(c) 2014-2016 Douglas Christopher Wilson
-   * MIT Licensed
-   *)
-
-express/lib/express.js:
-  (*!
-   * express
-   * Copyright(c) 2009-2013 TJ Holowaychuk
-   * Copyright(c) 2013 Roman Shtylman
-   * Copyright(c) 2014-2015 Douglas Christopher Wilson
-   * MIT Licensed
-   *)
-
-express/index.js:
-  (*!
-   * express
-   * Copyright(c) 2009-2013 TJ Holowaychuk
-   * Copyright(c) 2013 Roman Shtylman
-   * Copyright(c) 2014-2015 Douglas Christopher Wilson
    * MIT Licensed
    *)
 */

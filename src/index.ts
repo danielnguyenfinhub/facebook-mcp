@@ -17,8 +17,18 @@ import { registerLeadGenTools } from "./tools/leadgen.js";
 import { registerEventTools } from "./tools/events.js";
 import { registerUserTools } from "./tools/user.js";
 import { registerRatingTools } from "./tools/ratings.js";
+import { registerAdAccountTools } from "./tools/ad-accounts.js";
+import { registerCampaignTools } from "./tools/campaigns.js";
+import { registerAdSetTools } from "./tools/ad-sets.js";
+import { registerAdTools } from "./tools/ads.js";
+import { registerAdCreativeTools } from "./tools/ad-creatives.js";
+import { registerAdImageTools } from "./tools/ad-images.js";
+import { registerAdVideoTools } from "./tools/ad-videos.js";
+import { registerAudienceTools } from "./tools/audiences.js";
+import { registerAdInsightTools } from "./tools/ad-insights.js";
+import { registerAdRuleTools } from "./tools/ad-rules.js";
 
-const TOOL_COUNT = 71;
+const TOOL_COUNT = 120;
 
 function createServer(): McpServer {
   const server = new McpServer({
@@ -39,6 +49,18 @@ function createServer(): McpServer {
   registerEventTools(server);          // 4 tools
   registerUserTools(server);           // 3 tools
   registerRatingTools(server);         // 2 tools
+
+  // Marketing API modules
+  registerAdAccountTools(server);      // 4 tools
+  registerCampaignTools(server);       // 6 tools
+  registerAdSetTools(server);          // 6 tools
+  registerAdTools(server);             // 6 tools
+  registerAdCreativeTools(server);     // 5 tools
+  registerAdImageTools(server);        // 4 tools
+  registerAdVideoTools(server);        // 3 tools
+  registerAudienceTools(server);       // 6 tools
+  registerAdInsightTools(server);      // 5 tools
+  registerAdRuleTools(server);         // 4 tools
 
   return server;
 }
