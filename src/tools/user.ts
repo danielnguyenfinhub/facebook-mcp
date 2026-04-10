@@ -10,7 +10,7 @@ export function registerUserTools(server: McpServer): void {
     {},
     async () => {
       try {
-        const result = await fbFetch(`/me?fields=id,name,email`);
+        const result = await fbFetch(`/me?fields=id,name,first_name,last_name,picture`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };

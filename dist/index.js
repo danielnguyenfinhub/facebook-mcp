@@ -1,3 +1,4 @@
+"use strict";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -48618,7 +48619,7 @@ function registerUserTools(server) {
     {},
     async () => {
       try {
-        const result = await fbFetch(`/me?fields=id,name,email`);
+        const result = await fbFetch(`/me?fields=id,name,first_name,last_name,picture`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -49988,6 +49989,17 @@ async function main() {
     console.error("Facebook MCP server running on stdio");
   } else {
     const app = (0, import_express.default)();
+    app.use((_req, res, next) => {
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
+      res.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, Mcp-Session-Id");
+      res.setHeader("Access-Control-Expose-Headers", "Mcp-Session-Id");
+      if (_req.method === "OPTIONS") {
+        res.status(204).end();
+        return;
+      }
+      next();
+    });
     app.use(import_express.default.json());
     const sessions = /* @__PURE__ */ new Map();
     app.get("/health", (_req, res) => {
@@ -50050,7 +50062,7 @@ async function main() {
       }
     });
     const PORT = parseInt(process.env.PORT || "8080", 10);
-    app.listen(PORT, () => {
+    app.listen(PORT, "0.0.0.0", () => {
       console.log(`Facebook MCP server listening on port ${PORT}`);
       console.log(`Health: http://localhost:${PORT}/health`);
       console.log(`MCP endpoint: http://localhost:${PORT}/mcp`);
