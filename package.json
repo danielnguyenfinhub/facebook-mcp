@@ -1,20 +1,21 @@
 {
   "name": "facebook-mcp-server",
-  "version": "2.0.0",
-  "description": "Facebook Graph API MCP Server - 120 tools",
+  "version": "1.0.0",
+  "description": "Facebook Graph API MCP Server",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc --skipLibCheck",
-    "start": "node dist/index.js"
+    "build": "echo 'Using pre-compiled bundle'",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@modelcontextprotocol/sdk": "^1.11.0",
     "express": "^5.1.0",
-    "zod": "^3.0.0"
+    "zod": "^3.23.0"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "@types/node": "^20.0.0",
-    "@types/express": "^5.0.0"
+    "@types/express": "^5.0.2",
+    "@types/node": "^22.15.3",
+    "typescript": "^5.8.3"
   }
 }
