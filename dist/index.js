@@ -47146,16 +47146,112 @@ var StdioServerTransport = class {
 };
 
 // src/fb-client.ts
-var USER_TOKEN = process.env.FACEBOOK_ACCESS_TOKEN || "";
-var PAGE_ID = process.env.FACEBOOK_PAGE_ID || "";
+var USER_TOKEN = process.env.FACEBOOK_ACCESS_TOKEN || process.env.FB_PAGE_ACCESS_TOKEN || process.env.FB_ACCESS_TOKEN || "";
+var PAGE_ID = process.env.FACEBOOK_PAGE_ID || process.env.FB_PAGE_ID || "";
+var APP_ID = process.env.FB_APP_ID || process.env.FACEBOOK_APP_ID || "";
+var APP_SECRET = process.env.FB_APP_SECRET || process.env.FACEBOOK_APP_SECRET || "";
 var API_VERSION = process.env.FB_API_VERSION || "v25.0";
 var BASE_URL = `https://graph.facebook.com/${API_VERSION}`;
 var pageAccessToken = "";
 var resolvedPageId = PAGE_ID;
+var tokenExpiresAt = null;
+var lastInitAt = 0;
+var REINIT_COOLDOWN_MS = 30000;
+function appsecretProof(token) {
+  if (!APP_SECRET || !token) return "";
+  return import_crypto2.default.createHmac("sha256", APP_SECRET).update(token).digest("hex");
+}
+__name(appsecretProof, "appsecretProof");
+function isOAuthExpiredError(body, status) {
+  if (status !== 400 && status !== 401 && status !== 403) return false;
+  try {
+    const parsed = JSON.parse(body);
+    const err = parsed && parsed.error;
+    if (!err) return false;
+    if (err.code === 190) return true;
+    if (err.type === "OAuthException" && /expir|invalid|session/i.test(err.message || "")) return true;
+    return false;
+  } catch {
+    return /OAuthException|expired|invalid.*token|Session has expired/i.test(body);
+  }
+}
+__name(isOAuthExpiredError, "isOAuthExpiredError");
+async function exchangeForLongLivedToken(token) {
+  const qs = new URLSearchParams({
+    grant_type: "fb_exchange_token",
+    client_id: APP_ID,
+    client_secret: APP_SECRET,
+    fb_exchange_token: token
+  });
+  const res = await fetch(`${BASE_URL}/oauth/access_token?${qs}`);
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`${res.status} ${body}`);
+  }
+  const data = await res.json();
+  return data.access_token || null;
+}
+__name(exchangeForLongLivedToken, "exchangeForLongLivedToken");
+async function debugToken(token) {
+  try {
+    const accessParam = APP_ID && APP_SECRET ? `${APP_ID}|${APP_SECRET}` : token;
+    const qs = new URLSearchParams({ input_token: token, access_token: accessParam });
+    const res = await fetch(`${BASE_URL}/debug_token?${qs}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.data || null;
+  } catch {
+    return null;
+  }
+}
+__name(debugToken, "debugToken");
 async function init() {
-  if (!USER_TOKEN) throw new Error("FACEBOOK_ACCESS_TOKEN env var is required");
-  const scopes = await getTokenScopes();
-  console.log(`[fb-client] Token scopes: ${scopes.join(", ")}`);
+  if (!USER_TOKEN) throw new Error("FACEBOOK_ACCESS_TOKEN (or FB_PAGE_ACCESS_TOKEN) env var is required");
+  let longLivedExchange = "skipped";
+  if (APP_ID && APP_SECRET) {
+    try {
+      const exchanged = await exchangeForLongLivedToken(USER_TOKEN);
+      if (exchanged && exchanged !== USER_TOKEN) {
+        USER_TOKEN = exchanged;
+        console.log("[fb-client] \u2705 Exchanged token for long-lived (~60-day) user token");
+      }
+      longLivedExchange = "success";
+    } catch (e) {
+      longLivedExchange = "failed";
+      console.warn(`[fb-client] \u26A0\uFE0F  Long-lived exchange failed: ${e.message}`);
+    }
+  } else {
+    console.warn("[fb-client] \u2139\uFE0F  FB_APP_ID/FB_APP_SECRET not set \u2014 skipping long-lived exchange. Set them to auto-extend short-lived tokens (~1h) into long-lived (~60d) tokens.");
+  }
+  const debug = await debugToken(USER_TOKEN);
+  const scopes = (debug && debug.scopes) || [];
+  const tokenType = (debug && debug.type) || "UNKNOWN";
+  const expiresAt = (debug && debug.expires_at) || 0;
+  const dataAccessExpiresAt = (debug && debug.data_access_expires_at) || 0;
+  const isValid = !debug || debug.is_valid !== false;
+  tokenExpiresAt = expiresAt || null;
+  if (!isValid) {
+    console.error(`[fb-client] \u274C debug_token reports token is INVALID: ${JSON.stringify((debug && debug.error) || {})}`);
+  }
+  if (scopes.length > 0) {
+    console.log(`[fb-client] Token scopes: ${scopes.join(", ")}`);
+  }
+  const now = Math.floor(Date.now() / 1e3);
+  if (expiresAt === 0) {
+    console.log("[fb-client] \u2705 Token never expires");
+  } else {
+    const secondsLeft = expiresAt - now;
+    const days = Math.round(secondsLeft / 86400);
+    console.log(`[fb-client] Token expires in ~${days} day(s) (${new Date(expiresAt * 1e3).toISOString()})`);
+    if (secondsLeft < 3600) {
+      console.warn("[fb-client] \u26A0\uFE0F  Token expires in less than 1 hour. It is almost certainly a short-lived token. Set FB_APP_ID + FB_APP_SECRET so the server can auto-exchange it for a 60-day long-lived token.");
+    } else if (secondsLeft < 86400) {
+      console.warn("[fb-client] \u26A0\uFE0F  Token expires in less than 24 hours.");
+    }
+  }
+  if (dataAccessExpiresAt && dataAccessExpiresAt < now) {
+    console.warn("[fb-client] \u26A0\uFE0F  data_access_expires_at has already passed \u2014 the user must re-authorize the app.");
+  }
   const recommended = [
     "pages_read_engagement",
     "pages_manage_posts",
@@ -47168,11 +47264,28 @@ async function init() {
     "pages_messaging"
   ];
   const missing = recommended.filter((s) => !scopes.includes(s));
-  if (missing.length > 0) {
+  if (scopes.length > 0 && missing.length > 0) {
     console.warn(`[fb-client] \u26A0\uFE0F  Missing recommended scopes: ${missing.join(", ")}`);
   }
-  const accountsUrl = `${BASE_URL}/me/accounts?fields=id,name,access_token&access_token=${USER_TOKEN}`;
-  const accountsRes = await fetch(accountsUrl);
+  const isPageToken = /page/i.test(tokenType);
+  if (isPageToken) {
+    console.log("[fb-client] \u2139\uFE0F  Provided token is a Page token \u2014 using directly");
+    pageAccessToken = USER_TOKEN;
+    lastInitAt = Date.now();
+    return {
+      pageId: resolvedPageId,
+      pageName: "(page-token)",
+      scopes,
+      tokenType,
+      expiresAt: tokenExpiresAt,
+      expiresIn: expiresAt ? expiresAt - now : null,
+      longLivedExchange
+    };
+  }
+  const accountsQs = new URLSearchParams({ fields: "id,name,access_token", access_token: USER_TOKEN });
+  const proof0 = appsecretProof(USER_TOKEN);
+  if (proof0) accountsQs.set("appsecret_proof", proof0);
+  const accountsRes = await fetch(`${BASE_URL}/me/accounts?${accountsQs}`);
   if (!accountsRes.ok) {
     const body = await accountsRes.text();
     throw new Error(`Failed to get page accounts: ${accountsRes.status} ${body}`);
@@ -47180,9 +47293,18 @@ async function init() {
   const accountsData = await accountsRes.json();
   const pages = accountsData.data || [];
   if (pages.length === 0) {
-    console.warn("[fb-client] \u26A0\uFE0F  No pages found. Page operations will use user token (limited).");
+    console.warn("[fb-client] \u26A0\uFE0F  No pages found on this user. Page operations will use the user token (limited).");
     pageAccessToken = USER_TOKEN;
-    return { pageId: resolvedPageId, pageName: "(none)", scopes };
+    lastInitAt = Date.now();
+    return {
+      pageId: resolvedPageId,
+      pageName: "(none)",
+      scopes,
+      tokenType,
+      expiresAt: tokenExpiresAt,
+      expiresIn: expiresAt ? expiresAt - now : null,
+      longLivedExchange
+    };
   }
   let page = pages[0];
   if (PAGE_ID) {
@@ -47195,26 +47317,30 @@ async function init() {
   }
   pageAccessToken = page.access_token;
   resolvedPageId = page.id;
+  lastInitAt = Date.now();
   console.log(`[fb-client] \u2705 Page token acquired for "${page.name}" (${page.id})`);
-  return { pageId: page.id, pageName: page.name, scopes };
+  return {
+    pageId: page.id,
+    pageName: page.name,
+    scopes,
+    tokenType,
+    expiresAt: tokenExpiresAt,
+    expiresIn: expiresAt ? expiresAt - now : null,
+    longLivedExchange
+  };
 }
 __name(init, "init");
 async function getTokenScopes() {
-  try {
-    const url = `${BASE_URL}/debug_token?input_token=${USER_TOKEN}&access_token=${USER_TOKEN}`;
-    const res = await fetch(url);
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.data?.scopes || [];
-  } catch {
-    return [];
-  }
+  const d = await debugToken(USER_TOKEN);
+  return (d && d.scopes) || [];
 }
 __name(getTokenScopes, "getTokenScopes");
-async function fbFetch(path, options = {}) {
+async function fbFetch(path, options = {}, _retry = false) {
   const token = pageAccessToken || USER_TOKEN;
   const separator = path.includes("?") ? "&" : "?";
-  const url = `${BASE_URL}${path}${separator}access_token=${token}`;
+  let url = `${BASE_URL}${path}${separator}access_token=${encodeURIComponent(token)}`;
+  const proof = appsecretProof(token);
+  if (proof) url += `&appsecret_proof=${proof}`;
   const res = await fetch(url, {
     ...options,
     headers: {
@@ -47224,6 +47350,16 @@ async function fbFetch(path, options = {}) {
   });
   if (!res.ok) {
     const body = await res.text();
+    if (!_retry && isOAuthExpiredError(body, res.status) && Date.now() - lastInitAt > REINIT_COOLDOWN_MS) {
+      console.warn("[fb-client] \u26A0\uFE0F  Detected OAuth 190 / expired token \u2014 re-running init() to refresh page token");
+      try {
+        await init();
+        return fbFetch(path, options, true);
+      } catch (reinitErr) {
+        throw new Error(`Facebook API error ${res.status}: ${body}
+[re-init also failed: ${reinitErr.message}]`);
+      }
+    }
     throw new Error(`Facebook API error ${res.status}: ${body}`);
   }
   const text = await res.text();
@@ -47238,9 +47374,11 @@ async function fbDelete(path) {
   return fbFetch(path, { method: "DELETE" });
 }
 __name(fbDelete, "fbDelete");
-async function marketingFetch(path, options = {}) {
+async function marketingFetch(path, options = {}, _retry = false) {
   const separator = path.includes("?") ? "&" : "?";
-  const url = `${BASE_URL}${path}${separator}access_token=${USER_TOKEN}`;
+  let url = `${BASE_URL}${path}${separator}access_token=${encodeURIComponent(USER_TOKEN)}`;
+  const proof = appsecretProof(USER_TOKEN);
+  if (proof) url += `&appsecret_proof=${proof}`;
   const res = await fetch(url, {
     ...options,
     headers: {
@@ -47250,6 +47388,16 @@ async function marketingFetch(path, options = {}) {
   });
   if (!res.ok) {
     const body = await res.text();
+    if (!_retry && isOAuthExpiredError(body, res.status) && Date.now() - lastInitAt > REINIT_COOLDOWN_MS) {
+      console.warn("[fb-client] \u26A0\uFE0F  Detected OAuth 190 / expired token on Marketing API \u2014 re-running init()");
+      try {
+        await init();
+        return marketingFetch(path, options, true);
+      } catch (reinitErr) {
+        throw new Error(`Facebook Marketing API error ${res.status}: ${body}
+[re-init also failed: ${reinitErr.message}]`);
+      }
+    }
     throw new Error(`Facebook Marketing API error ${res.status}: ${body}`);
   }
   const text = await res.text();
@@ -50013,6 +50161,10 @@ async function main() {
           pageId: tokenStatus.pageId,
           pageName: tokenStatus.pageName,
           scopes: tokenStatus.scopes,
+          tokenType: tokenStatus.tokenType,
+          expiresAt: tokenStatus.expiresAt,
+          expiresIn: tokenStatus.expiresIn,
+          longLivedExchange: tokenStatus.longLivedExchange,
           pageTokenAcquired: true
         } : {
           pageTokenAcquired: false,

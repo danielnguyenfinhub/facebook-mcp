@@ -32,7 +32,15 @@ import { registerAdRuleTools } from "./tools/ad-rules.js";
 const TOOL_COUNT = 120;
 
 // Token status from init - shared with health endpoint
-let tokenStatus: { pageId: string; pageName: string; scopes: string[] } | null = null;
+let tokenStatus: {
+  pageId: string;
+  pageName: string;
+  scopes: string[];
+  tokenType?: string;
+  expiresAt?: number | null;
+  expiresIn?: number | null;
+  longLivedExchange?: 'success' | 'skipped' | 'failed';
+} | null = null;
 let initError: string | null = null;
 
 function createServer(): McpServer {
@@ -117,6 +125,10 @@ async function main() {
           pageId: tokenStatus.pageId,
           pageName: tokenStatus.pageName,
           scopes: tokenStatus.scopes,
+          tokenType: tokenStatus.tokenType,
+          expiresAt: tokenStatus.expiresAt,
+          expiresIn: tokenStatus.expiresIn,
+          longLivedExchange: tokenStatus.longLivedExchange,
           pageTokenAcquired: true,
         } : {
           pageTokenAcquired: false,

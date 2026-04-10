@@ -133,10 +133,37 @@ A production-ready Model Context Protocol (MCP) server for the Facebook Graph AP
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `FB_PAGE_ACCESS_TOKEN` | Yes | — | Facebook Page Access Token |
+| `FACEBOOK_ACCESS_TOKEN` | Yes | — | Facebook User or Page access token. Aliases: `FB_PAGE_ACCESS_TOKEN`, `FB_ACCESS_TOKEN`. |
+| `FB_APP_ID` | Recommended | — | Your Facebook App ID. Required for automatic short-lived → long-lived token exchange and for `appsecret_proof`. |
+| `FB_APP_SECRET` | Recommended | — | Your Facebook App Secret. Required for automatic long-lived token exchange and `appsecret_proof`. |
+| `FACEBOOK_PAGE_ID` | No | — | Pin a specific Page when the user manages several. Alias: `FB_PAGE_ID`. |
 | `FB_API_VERSION` | No | `v25.0` | Facebook Graph API version |
-| `PORT` | No | `3000` | Server port |
+| `PORT` | No | `8080` | Server port |
 | `TRANSPORT` | No | `http` | Transport mode (`http` or `stdio`) |
+
+### Why you keep getting "token expired"
+
+Tokens copied from Graph API Explorer are **short-lived (~1–2 hours)** by default. They will start failing an hour or two after your deploy, even though they "looked" fine at startup.
+
+This server can exchange them for a **long-lived (~60 day)** token automatically, but only if it has your app credentials. To enable that:
+
+1. Set `FB_APP_ID` and `FB_APP_SECRET` to the values from your Facebook app's Settings → Basic.
+2. On each restart, the server will call `/oauth/access_token?grant_type=fb_exchange_token` and upgrade the token in memory.
+3. Verify at `GET /health` — look at the `token.expiresIn` and `token.longLivedExchange` fields. `expiresIn: null` (or a value around 5 000 000+ seconds) means you're good.
+
+If you can't or don't want to set `FB_APP_ID`/`FB_APP_SECRET`, exchange the token manually before you deploy:
+
+```bash
+curl -sG "https://graph.facebook.com/v25.0/oauth/access_token" \
+  --data-urlencode "grant_type=fb_exchange_token" \
+  --data-urlencode "client_id=YOUR_APP_ID" \
+  --data-urlencode "client_secret=YOUR_APP_SECRET" \
+  --data-urlencode "fb_exchange_token=YOUR_SHORT_LIVED_TOKEN"
+```
+
+Then set the returned `access_token` as `FACEBOOK_ACCESS_TOKEN`. Long-lived **Page** access tokens derived from a long-lived user token never expire unless the user changes their password or revokes the app.
+
+The server also auto-re-runs `init()` and retries the request **once** when it sees an OAuth 190 ("session has expired") response — so transient rotations are handled transparently.
 
 ## Setup
 
@@ -192,8 +219,11 @@ curl -X POST http://localhost:3000/mcp \
 1. Push to a GitHub repository
 2. Connect the repo to [Railway](https://railway.app)
 3. Set environment variables:
-   - `FB_PAGE_ACCESS_TOKEN` — your Page access token
-   - `FB_API_VERSION` — `v25.0` (optional)
+   - `FACEBOOK_ACCESS_TOKEN` — your User or Page access token
+   - `FB_APP_ID` — your Facebook App ID (enables automatic long-lived token exchange)
+   - `FB_APP_SECRET` — your Facebook App Secret (enables `appsecret_proof` and long-lived exchange)
+   - `FACEBOOK_PAGE_ID` — *(optional)* pin to a specific Page
+   - `FB_API_VERSION` — `v25.0` *(optional)*
 4. Railway will auto-detect the `Procfile` and deploy
 
 ## Architecture
