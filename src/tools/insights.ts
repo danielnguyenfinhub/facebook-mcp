@@ -70,6 +70,7 @@ export function registerInsightTools(server: McpServer): void {
   );
 
   // 4. get_page_fans_by_city
+  // Fix: page_fans_city is a lifetime-only metric — period=day returns invalid metric error
   server.tool(
     "get_page_fans_by_city",
     "Get Page fans broken down by city",
@@ -78,7 +79,7 @@ export function registerInsightTools(server: McpServer): void {
     },
     async ({ page_id }) => {
       try {
-        const result = await fbFetch(`/${page_id}/insights?metric=page_fans_city&period=day`);
+        const result = await fbFetch(`/${page_id}/insights?metric=page_fans_city&period=lifetime`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
