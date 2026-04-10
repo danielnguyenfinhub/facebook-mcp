@@ -4,6 +4,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
+import { init as fbInit } from "./fb-client.js";
 import { registerPageTools } from "./tools/pages.js";
 import { registerPostTools } from "./tools/posts.js";
 import { registerCommentTools } from "./tools/comments.js";
@@ -30,10 +31,14 @@ import { registerAdRuleTools } from "./tools/ad-rules.js";
 
 const TOOL_COUNT = 120;
 
+// Token status from init - shared with health endpoint
+let tokenStatus: { pageId: string; pageName: string; scopes: string[] } | null = null;
+let initError: string | null = null;
+
 function createServer(): McpServer {
   const server = new McpServer({
     name: "facebook-mcp-server",
-    version: "1.0.0",
+    version: "2.0.0",
   });
 
   registerPageTools(server);           // 8 tools
@@ -66,6 +71,17 @@ function createServer(): McpServer {
 }
 
 async function main() {
+  // Initialize token exchange BEFORE starting server
+  try {
+    tokenStatus = await fbInit();
+    console.log(`[init] ✅ Page: "${tokenStatus.pageName}" (${tokenStatus.pageId})`);
+    console.log(`[init] ✅ Scopes: ${tokenStatus.scopes.join(', ')}`);
+  } catch (err: any) {
+    initError = err.message;
+    console.error(`[init] ⚠️  Token exchange failed: ${initError}`);
+    console.error('[init] Server will start but page operations may fail.');
+  }
+
   const transport = process.env.TRANSPORT || "http";
 
   if (transport === "stdio") {
@@ -80,14 +96,23 @@ async function main() {
     // Store sessions: sessionId → { server, transport }
     const sessions = new Map<string, { server: McpServer; transport: StreamableHTTPServerTransport }>();
 
-    // Health endpoint
+    // Health endpoint - now shows token status
     app.get("/health", (_req, res) => {
       res.json({
         status: "ok",
         server: "facebook-mcp-server",
-        version: "1.0.0",
+        version: "2.0.0",
         tools: TOOL_COUNT,
         activeSessions: sessions.size,
+        token: tokenStatus ? {
+          pageId: tokenStatus.pageId,
+          pageName: tokenStatus.pageName,
+          scopes: tokenStatus.scopes,
+          pageTokenAcquired: true,
+        } : {
+          pageTokenAcquired: false,
+          error: initError,
+        },
       });
     });
 
@@ -141,7 +166,7 @@ async function main() {
       }
     });
 
-    const PORT = parseInt(process.env.PORT || "3000", 10);
+    const PORT = parseInt(process.env.PORT || "8080", 10);
     app.listen(PORT, () => {
       console.log(`Facebook MCP server listening on port ${PORT}`);
       console.log(`Health: http://localhost:${PORT}/health`);

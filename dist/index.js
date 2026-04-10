@@ -517,7 +517,7 @@ var require_node = __commonJS({
   "node_modules/debug/src/node.js"(exports2, module2) {
     var tty = require("tty");
     var util2 = require("util");
-    exports2.init = init;
+    exports2.init = init2;
     exports2.log = log;
     exports2.formatArgs = formatArgs;
     exports2.save = save;
@@ -672,14 +672,14 @@ var require_node = __commonJS({
       return process.env.DEBUG;
     }
     __name(load, "load");
-    function init(debug) {
+    function init2(debug) {
       debug.inspectOpts = {};
       const keys = Object.keys(exports2.inspectOpts);
       for (let i = 0; i < keys.length; i++) {
         debug.inspectOpts[keys[i]] = exports2.inspectOpts[keys[i]];
       }
     }
-    __name(init, "init");
+    __name(init2, "init");
     module2.exports = require_common()(exports2);
     var { formatters } = module2.exports;
     formatters.o = function(v) {
@@ -16759,7 +16759,7 @@ var require_shams = __commonJS({
         return true;
       }
       var obj = {};
-      var sym = /* @__PURE__ */ Symbol("test");
+      var sym = Symbol("test");
       var symObj = Object(sym);
       if (typeof sym === "string") {
         return false;
@@ -16818,7 +16818,7 @@ var require_has_symbols = __commonJS({
       if (typeof origSymbol("foo") !== "symbol") {
         return false;
       }
-      if (typeof /* @__PURE__ */ Symbol("bar") !== "symbol") {
+      if (typeof Symbol("bar") !== "symbol") {
         return false;
       }
       return hasSymbolSham();
@@ -17075,7 +17075,7 @@ var require_get_intrinsic = __commonJS({
     var throwTypeError = /* @__PURE__ */ __name(function() {
       throw new $TypeError();
     }, "throwTypeError");
-    var ThrowTypeError = $gOPD ? (function() {
+    var ThrowTypeError = $gOPD ? function() {
       try {
         arguments.callee;
         return throwTypeError;
@@ -17086,7 +17086,7 @@ var require_get_intrinsic = __commonJS({
           return throwTypeError;
         }
       }
-    })() : throwTypeError;
+    }() : throwTypeError;
     var hasSymbols = require_has_symbols()();
     var getProto = require_get_proto();
     var $ObjectGPO = require_Object_getPrototypeOf();
@@ -17613,13 +17613,13 @@ var require_utils2 = __commonJS({
     var setMaxIndex = /* @__PURE__ */ __name(function setMaxIndex2(obj, maxIndex) {
       overflowChannel.set(obj, maxIndex);
     }, "setMaxIndex");
-    var hexTable = (function() {
+    var hexTable = function() {
       var array2 = [];
       for (var i = 0; i < 256; ++i) {
         array2[array2.length] = "%" + ((i < 16 ? "0" : "") + i.toString(16)).toUpperCase();
       }
       return array2;
-    })();
+    }();
     var compactQueue = /* @__PURE__ */ __name(function compactQueue2(queue) {
       while (queue.length > 1) {
         var item = queue.pop();
@@ -19132,7 +19132,7 @@ var require_ipaddr = __commonJS({
         }
         return defaultName;
       };
-      ipaddr.IPv4 = (function() {
+      ipaddr.IPv4 = function() {
         function IPv4(octets) {
           var k, len, octet;
           if (octets.length !== 4) {
@@ -19218,7 +19218,7 @@ var require_ipaddr = __commonJS({
           return 32 - cidr;
         };
         return IPv4;
-      })();
+      }();
       ipv4Part = "(0?\\d+|0x[a-f0-9]+)";
       ipv4Regexes = {
         fourOctet: new RegExp("^" + ipv4Part + "\\." + ipv4Part + "\\." + ipv4Part + "\\." + ipv4Part + "$", "i"),
@@ -19234,7 +19234,7 @@ var require_ipaddr = __commonJS({
           }
         }, "parseIntAuto");
         if (match = string3.match(ipv4Regexes.fourOctet)) {
-          return (function() {
+          return function() {
             var k, len, ref, results;
             ref = match.slice(1, 6);
             results = [];
@@ -19243,25 +19243,25 @@ var require_ipaddr = __commonJS({
               results.push(parseIntAuto(part));
             }
             return results;
-          })();
+          }();
         } else if (match = string3.match(ipv4Regexes.longValue)) {
           value = parseIntAuto(match[1]);
           if (value > 4294967295 || value < 0) {
             throw new Error("ipaddr: address outside defined range");
           }
-          return (function() {
+          return function() {
             var k, results;
             results = [];
             for (shift = k = 0; k <= 24; shift = k += 8) {
               results.push(value >> shift & 255);
             }
             return results;
-          })().reverse();
+          }().reverse();
         } else {
           return null;
         }
       };
-      ipaddr.IPv6 = (function() {
+      ipaddr.IPv6 = function() {
         function IPv6(parts, zoneId) {
           var i, k, l, len, part, ref;
           if (parts.length === 16) {
@@ -19322,7 +19322,7 @@ var require_ipaddr = __commonJS({
         };
         IPv6.prototype.toNormalizedString = function() {
           var addr, part, suffix;
-          addr = (function() {
+          addr = function() {
             var k, len, ref, results;
             ref = this.parts;
             results = [];
@@ -19331,7 +19331,7 @@ var require_ipaddr = __commonJS({
               results.push(part.toString(16));
             }
             return results;
-          }).call(this).join(":");
+          }.call(this).join(":");
           suffix = "";
           if (this.zoneId) {
             suffix = "%" + this.zoneId;
@@ -19340,7 +19340,7 @@ var require_ipaddr = __commonJS({
         };
         IPv6.prototype.toFixedLengthString = function() {
           var addr, part, suffix;
-          addr = (function() {
+          addr = function() {
             var k, len, ref, results;
             ref = this.parts;
             results = [];
@@ -19349,7 +19349,7 @@ var require_ipaddr = __commonJS({
               results.push(part.toString(16).padStart(4, "0"));
             }
             return results;
-          }).call(this).join(":");
+          }.call(this).join(":");
           suffix = "";
           if (this.zoneId) {
             suffix = "%" + this.zoneId;
@@ -19434,7 +19434,7 @@ var require_ipaddr = __commonJS({
           return 128 - cidr;
         };
         return IPv6;
-      })();
+      }();
       ipv6Part = "(?:[0-9a-f]+::?)+";
       zoneIndex = "%[0-9a-z]{1,}";
       ipv6Regexes = {
@@ -19478,7 +19478,7 @@ var require_ipaddr = __commonJS({
         if (string3[string3.length - 1] === ":") {
           string3 = string3.slice(0, -1);
         }
-        parts = (function() {
+        parts = function() {
           var k, len, ref, results;
           ref = string3.split(":");
           results = [];
@@ -19487,7 +19487,7 @@ var require_ipaddr = __commonJS({
             results.push(parseInt(part, 16));
           }
           return results;
-        })();
+        }();
         return {
           parts,
           zoneId
@@ -21197,7 +21197,7 @@ var require_application = __commonJS({
     var flatten = Array.prototype.flat;
     var app = exports2 = module2.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
-    app.init = /* @__PURE__ */ __name(function init() {
+    app.init = /* @__PURE__ */ __name(function init2() {
       var router = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
@@ -35140,7 +35140,7 @@ ZodNaN.create = (params) => {
     ...processCreateParams(params)
   });
 };
-var BRAND = /* @__PURE__ */ Symbol("zod_brand");
+var BRAND = Symbol("zod_brand");
 var ZodBranded = class extends ZodType {
   static {
     __name(this, "ZodBranded");
@@ -35353,14 +35353,14 @@ var ostring = /* @__PURE__ */ __name(() => stringType().optional(), "ostring");
 var onumber = /* @__PURE__ */ __name(() => numberType().optional(), "onumber");
 var oboolean = /* @__PURE__ */ __name(() => booleanType().optional(), "oboolean");
 var coerce = {
-  string: /* @__PURE__ */ __name(((arg) => ZodString.create({ ...arg, coerce: true })), "string"),
-  number: /* @__PURE__ */ __name(((arg) => ZodNumber.create({ ...arg, coerce: true })), "number"),
-  boolean: /* @__PURE__ */ __name(((arg) => ZodBoolean.create({
+  string: /* @__PURE__ */ __name((arg) => ZodString.create({ ...arg, coerce: true }), "string"),
+  number: /* @__PURE__ */ __name((arg) => ZodNumber.create({ ...arg, coerce: true }), "number"),
+  boolean: /* @__PURE__ */ __name((arg) => ZodBoolean.create({
     ...arg,
     coerce: true
-  })), "boolean"),
-  bigint: /* @__PURE__ */ __name(((arg) => ZodBigInt.create({ ...arg, coerce: true })), "bigint"),
-  date: /* @__PURE__ */ __name(((arg) => ZodDate.create({ ...arg, coerce: true })), "date")
+  }), "boolean"),
+  bigint: /* @__PURE__ */ __name((arg) => ZodBigInt.create({ ...arg, coerce: true }), "bigint"),
+  date: /* @__PURE__ */ __name((arg) => ZodDate.create({ ...arg, coerce: true }), "date")
 };
 var NEVER = INVALID;
 
@@ -35370,7 +35370,7 @@ var NEVER2 = Object.freeze({
 });
 // @__NO_SIDE_EFFECTS__
 function $constructor(name, initializer3, params) {
-  function init(inst, def) {
+  function init2(inst, def) {
     var _a;
     Object.defineProperty(inst, "_zod", {
       value: inst._zod ?? {},
@@ -35386,7 +35386,7 @@ function $constructor(name, initializer3, params) {
     inst._zod.constr = _;
     inst._zod.def = def;
   }
-  __name(init, "init");
+  __name(init2, "init");
   const Parent = params?.Parent ?? Object;
   class Definition extends Parent {
     static {
@@ -35397,7 +35397,7 @@ function $constructor(name, initializer3, params) {
   function _(def) {
     var _a;
     const inst = params?.Parent ? new Definition() : this;
-    init(inst, def);
+    init2(inst, def);
     (_a = inst._zod).deferred ?? (_a.deferred = []);
     for (const fn of inst._zod.deferred) {
       fn();
@@ -35405,7 +35405,7 @@ function $constructor(name, initializer3, params) {
     return inst;
   }
   __name(_, "_");
-  Object.defineProperty(_, "init", { value: init });
+  Object.defineProperty(_, "init", { value: init2 });
   Object.defineProperty(_, Symbol.hasInstance, {
     value: /* @__PURE__ */ __name((inst) => {
       if (params?.Parent && inst instanceof params.Parent)
@@ -35417,6 +35417,7 @@ function $constructor(name, initializer3, params) {
   return _;
 }
 __name($constructor, "$constructor");
+var $brand = Symbol("zod_brand");
 var $ZodAsyncError = class extends Error {
   static {
     __name(this, "$ZodAsyncError");
@@ -37993,6 +37994,8 @@ function en_default2() {
 __name(en_default2, "default");
 
 // node_modules/zod/v4/core/registries.js
+var $output = Symbol("ZodOutput");
+var $input = Symbol("ZodInput");
 var $ZodRegistry = class {
   static {
     __name(this, "$ZodRegistry");
@@ -39334,10 +39337,10 @@ var ZodMiniType = /* @__PURE__ */ $constructor("ZodMiniType", (inst, def) => {
   };
   inst.clone = (_def, params) => clone(inst, _def, params);
   inst.brand = () => inst;
-  inst.register = ((reg, meta) => {
+  inst.register = (reg, meta) => {
     reg.add(inst, meta);
     return inst;
-  });
+  };
 });
 var ZodMiniObject = /* @__PURE__ */ $constructor("ZodMiniObject", (inst, def) => {
   $ZodObject.init(inst, def);
@@ -39615,10 +39618,10 @@ var ZodType2 = /* @__PURE__ */ $constructor("ZodType", (inst, def) => {
   };
   inst.clone = (def2, params) => clone(inst, def2, params);
   inst.brand = () => inst;
-  inst.register = ((reg, meta) => {
+  inst.register = (reg, meta) => {
     reg.add(inst, meta);
     return inst;
-  });
+  };
   inst.parse = (data, params) => parse2(inst, data, params, { callee: inst.parse });
   inst.safeParse = (data, params) => safeParse3(inst, data, params);
   inst.parseAsync = async (data, params) => parseAsync2(inst, data, params, { callee: inst.parseAsync });
@@ -41788,7 +41791,7 @@ function isTerminal(status) {
 __name(isTerminal, "isTerminal");
 
 // node_modules/zod-to-json-schema/dist/esm/Options.js
-var ignoreOverride = /* @__PURE__ */ Symbol("Let zodToJsonSchema decide on which parser to use");
+var ignoreOverride = Symbol("Let zodToJsonSchema decide on which parser to use");
 var defaultOptions = {
   name: void 0,
   $refStrategy: "root",
@@ -44821,7 +44824,7 @@ var Server = class extends Protocol {
 };
 
 // node_modules/@modelcontextprotocol/sdk/dist/esm/server/completable.js
-var COMPLETABLE_SYMBOL = /* @__PURE__ */ Symbol.for("mcp.completable");
+var COMPLETABLE_SYMBOL = Symbol.for("mcp.completable");
 function isCompletable(schema) {
   return !!schema && typeof schema === "object" && COMPLETABLE_SYMBOL in schema;
 }
@@ -45765,16 +45768,16 @@ var newHeadersFromIncoming = /* @__PURE__ */ __name((incoming) => {
   }
   return new Headers(headerRecord);
 }, "newHeadersFromIncoming");
-var wrapBodyStream = /* @__PURE__ */ Symbol("wrapBodyStream");
+var wrapBodyStream = Symbol("wrapBodyStream");
 var newRequestFromIncoming = /* @__PURE__ */ __name((method, url, headers, incoming, abortController) => {
-  const init = {
+  const init2 = {
     method,
     headers,
     signal: abortController.signal
   };
   if (method === "TRACE") {
-    init.method = "GET";
-    const req = new Request(url, init);
+    init2.method = "GET";
+    const req = new Request(url, init2);
     Object.defineProperty(req, "method", {
       get() {
         return "TRACE";
@@ -45784,7 +45787,7 @@ var newRequestFromIncoming = /* @__PURE__ */ __name((method, url, headers, incom
   }
   if (!(method === "GET" || method === "HEAD")) {
     if ("rawBody" in incoming && incoming.rawBody instanceof Buffer) {
-      init.body = new ReadableStream({
+      init2.body = new ReadableStream({
         start(controller) {
           controller.enqueue(incoming.rawBody);
           controller.close();
@@ -45792,7 +45795,7 @@ var newRequestFromIncoming = /* @__PURE__ */ __name((method, url, headers, incom
       });
     } else if (incoming[wrapBodyStream]) {
       let reader;
-      init.body = new ReadableStream({
+      init2.body = new ReadableStream({
         async pull(controller) {
           try {
             reader ||= import_stream.Readable.toWeb(incoming).getReader();
@@ -45808,18 +45811,18 @@ var newRequestFromIncoming = /* @__PURE__ */ __name((method, url, headers, incom
         }
       });
     } else {
-      init.body = import_stream.Readable.toWeb(incoming);
+      init2.body = import_stream.Readable.toWeb(incoming);
     }
   }
-  return new Request(url, init);
+  return new Request(url, init2);
 }, "newRequestFromIncoming");
-var getRequestCache = /* @__PURE__ */ Symbol("getRequestCache");
-var requestCache = /* @__PURE__ */ Symbol("requestCache");
-var incomingKey = /* @__PURE__ */ Symbol("incomingKey");
-var urlKey = /* @__PURE__ */ Symbol("urlKey");
-var headersKey = /* @__PURE__ */ Symbol("headersKey");
-var abortControllerKey = /* @__PURE__ */ Symbol("abortControllerKey");
-var getAbortController = /* @__PURE__ */ Symbol("getAbortController");
+var getRequestCache = Symbol("getRequestCache");
+var requestCache = Symbol("requestCache");
+var incomingKey = Symbol("incomingKey");
+var urlKey = Symbol("urlKey");
+var headersKey = Symbol("headersKey");
+var abortControllerKey = Symbol("abortControllerKey");
+var getAbortController = Symbol("getAbortController");
 var requestPrototype = {
   get method() {
     return this[incomingKey].method || "GET";
@@ -45910,9 +45913,9 @@ var newRequest = /* @__PURE__ */ __name((incoming, defaultHostname) => {
   req[urlKey] = url.href;
   return req;
 }, "newRequest");
-var responseCache = /* @__PURE__ */ Symbol("responseCache");
-var getResponseCache = /* @__PURE__ */ Symbol("getResponseCache");
-var cacheKey = /* @__PURE__ */ Symbol("cache");
+var responseCache = Symbol("responseCache");
+var getResponseCache = Symbol("getResponseCache");
+var cacheKey = Symbol("cache");
 var GlobalResponse = global.Response;
 var Response2 = class _Response {
   static {
@@ -45924,25 +45927,25 @@ var Response2 = class _Response {
     delete this[cacheKey];
     return this[responseCache] ||= new GlobalResponse(this.#body, this.#init);
   }
-  constructor(body, init) {
+  constructor(body, init2) {
     let headers;
     this.#body = body;
-    if (init instanceof _Response) {
-      const cachedGlobalResponse = init[responseCache];
+    if (init2 instanceof _Response) {
+      const cachedGlobalResponse = init2[responseCache];
       if (cachedGlobalResponse) {
         this.#init = cachedGlobalResponse;
         this[getResponseCache]();
         return;
       } else {
-        this.#init = init.#init;
-        headers = new Headers(init.#init.headers);
+        this.#init = init2.#init;
+        headers = new Headers(init2.#init.headers);
       }
     } else {
-      this.#init = init;
+      this.#init = init2;
     }
     if (typeof body === "string" || typeof body?.getReader !== "undefined" || body instanceof Blob || body instanceof Uint8Array) {
       ;
-      this[cacheKey] = [init?.status || 200, body, headers || init?.headers];
+      this[cacheKey] = [init2?.status || 200, body, headers || init2?.headers];
     }
   }
   get headers() {
@@ -46055,8 +46058,8 @@ var X_ALREADY_SENT = "x-hono-already-sent";
 if (typeof global.crypto === "undefined") {
   global.crypto = import_crypto.default;
 }
-var outgoingEnded = /* @__PURE__ */ Symbol("outgoingEnded");
-var incomingDraining = /* @__PURE__ */ Symbol("incomingDraining");
+var outgoingEnded = Symbol("outgoingEnded");
+var incomingDraining = Symbol("incomingDraining");
 var DRAIN_TIMEOUT_MS = 500;
 var MAX_DRAIN_BYTES = 64 * 1024 * 1024;
 var drainIncoming = /* @__PURE__ */ __name((incoming) => {
@@ -47142,13 +47145,75 @@ var StdioServerTransport = class {
 };
 
 // src/fb-client.ts
-var PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN || "";
-var MARKETING_TOKEN = process.env.FACEBOOK_ACCESS_TOKEN || PAGE_ACCESS_TOKEN || "";
+var USER_TOKEN = process.env.FACEBOOK_ACCESS_TOKEN || "";
+var PAGE_ID = process.env.FACEBOOK_PAGE_ID || "";
 var API_VERSION = process.env.FB_API_VERSION || "v25.0";
 var BASE_URL = `https://graph.facebook.com/${API_VERSION}`;
+var pageAccessToken = "";
+var resolvedPageId = PAGE_ID;
+async function init() {
+  if (!USER_TOKEN) throw new Error("FACEBOOK_ACCESS_TOKEN env var is required");
+  const scopes = await getTokenScopes();
+  console.log(`[fb-client] Token scopes: ${scopes.join(", ")}`);
+  const recommended = [
+    "pages_read_engagement",
+    "pages_manage_posts",
+    "pages_read_user_content",
+    "read_insights",
+    "pages_manage_metadata",
+    "ads_read",
+    "ads_management",
+    "business_management",
+    "pages_messaging"
+  ];
+  const missing = recommended.filter((s) => !scopes.includes(s));
+  if (missing.length > 0) {
+    console.warn(`[fb-client] \u26A0\uFE0F  Missing recommended scopes: ${missing.join(", ")}`);
+  }
+  const accountsUrl = `${BASE_URL}/me/accounts?fields=id,name,access_token&access_token=${USER_TOKEN}`;
+  const accountsRes = await fetch(accountsUrl);
+  if (!accountsRes.ok) {
+    const body = await accountsRes.text();
+    throw new Error(`Failed to get page accounts: ${accountsRes.status} ${body}`);
+  }
+  const accountsData = await accountsRes.json();
+  const pages = accountsData.data || [];
+  if (pages.length === 0) {
+    console.warn("[fb-client] \u26A0\uFE0F  No pages found. Page operations will use user token (limited).");
+    pageAccessToken = USER_TOKEN;
+    return { pageId: resolvedPageId, pageName: "(none)", scopes };
+  }
+  let page = pages[0];
+  if (PAGE_ID) {
+    const match = pages.find((p) => p.id === PAGE_ID);
+    if (match) {
+      page = match;
+    } else {
+      console.warn(`[fb-client] \u26A0\uFE0F  Page ID ${PAGE_ID} not found in accounts. Using ${page.name} (${page.id})`);
+    }
+  }
+  pageAccessToken = page.access_token;
+  resolvedPageId = page.id;
+  console.log(`[fb-client] \u2705 Page token acquired for "${page.name}" (${page.id})`);
+  return { pageId: page.id, pageName: page.name, scopes };
+}
+__name(init, "init");
+async function getTokenScopes() {
+  try {
+    const url = `${BASE_URL}/debug_token?input_token=${USER_TOKEN}&access_token=${USER_TOKEN}`;
+    const res = await fetch(url);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.data?.scopes || [];
+  } catch {
+    return [];
+  }
+}
+__name(getTokenScopes, "getTokenScopes");
 async function fbFetch(path, options = {}) {
+  const token = pageAccessToken || USER_TOKEN;
   const separator = path.includes("?") ? "&" : "?";
-  const url = `${BASE_URL}${path}${separator}access_token=${PAGE_ACCESS_TOKEN}`;
+  const url = `${BASE_URL}${path}${separator}access_token=${token}`;
   const res = await fetch(url, {
     ...options,
     headers: {
@@ -47174,7 +47239,7 @@ async function fbDelete(path) {
 __name(fbDelete, "fbDelete");
 async function marketingFetch(path, options = {}) {
   const separator = path.includes("?") ? "&" : "?";
-  const url = `${BASE_URL}${path}${separator}access_token=${MARKETING_TOKEN}`;
+  const url = `${BASE_URL}${path}${separator}access_token=${USER_TOKEN}`;
   const res = await fetch(url, {
     ...options,
     headers: {
@@ -49872,10 +49937,12 @@ __name(registerAdRuleTools, "registerAdRuleTools");
 
 // src/index.ts
 var TOOL_COUNT = 120;
+var tokenStatus = null;
+var initError = null;
 function createServer() {
   const server = new McpServer({
     name: "facebook-mcp-server",
-    version: "1.0.0"
+    version: "2.0.0"
   });
   registerPageTools(server);
   registerPostTools(server);
@@ -49904,6 +49971,15 @@ function createServer() {
 }
 __name(createServer, "createServer");
 async function main() {
+  try {
+    tokenStatus = await init();
+    console.log(`[init] \u2705 Page: "${tokenStatus.pageName}" (${tokenStatus.pageId})`);
+    console.log(`[init] \u2705 Scopes: ${tokenStatus.scopes.join(", ")}`);
+  } catch (err) {
+    initError = err.message;
+    console.error(`[init] \u26A0\uFE0F  Token exchange failed: ${initError}`);
+    console.error("[init] Server will start but page operations may fail.");
+  }
   const transport = process.env.TRANSPORT || "http";
   if (transport === "stdio") {
     const server = createServer();
@@ -49918,9 +49994,18 @@ async function main() {
       res.json({
         status: "ok",
         server: "facebook-mcp-server",
-        version: "1.0.0",
+        version: "2.0.0",
         tools: TOOL_COUNT,
-        activeSessions: sessions.size
+        activeSessions: sessions.size,
+        token: tokenStatus ? {
+          pageId: tokenStatus.pageId,
+          pageName: tokenStatus.pageName,
+          scopes: tokenStatus.scopes,
+          pageTokenAcquired: true
+        } : {
+          pageTokenAcquired: false,
+          error: initError
+        }
       });
     });
     app.post("/mcp", async (req, res) => {
@@ -49964,7 +50049,7 @@ async function main() {
         res.status(404).json({ error: "Session not found" });
       }
     });
-    const PORT = parseInt(process.env.PORT || "3000", 10);
+    const PORT = parseInt(process.env.PORT || "8080", 10);
     app.listen(PORT, () => {
       console.log(`Facebook MCP server listening on port ${PORT}`);
       console.log(`Health: http://localhost:${PORT}/health`);
@@ -50087,9 +50172,6 @@ type-is/index.js:
    *)
 
 body-parser/lib/read.js:
-body-parser/lib/types/raw.js:
-body-parser/lib/types/text.js:
-body-parser/index.js:
   (*!
    * body-parser
    * Copyright(c) 2014-2015 Douglas Christopher Wilson
@@ -50097,10 +50179,38 @@ body-parser/index.js:
    *)
 
 body-parser/lib/types/json.js:
+  (*!
+   * body-parser
+   * Copyright(c) 2014 Jonathan Ong
+   * Copyright(c) 2014-2015 Douglas Christopher Wilson
+   * MIT Licensed
+   *)
+
+body-parser/lib/types/raw.js:
+  (*!
+   * body-parser
+   * Copyright(c) 2014-2015 Douglas Christopher Wilson
+   * MIT Licensed
+   *)
+
+body-parser/lib/types/text.js:
+  (*!
+   * body-parser
+   * Copyright(c) 2014-2015 Douglas Christopher Wilson
+   * MIT Licensed
+   *)
+
 body-parser/lib/types/urlencoded.js:
   (*!
    * body-parser
    * Copyright(c) 2014 Jonathan Ong
+   * Copyright(c) 2014-2015 Douglas Christopher Wilson
+   * MIT Licensed
+   *)
+
+body-parser/index.js:
+  (*!
+   * body-parser
    * Copyright(c) 2014-2015 Douglas Christopher Wilson
    * MIT Licensed
    *)
@@ -50137,10 +50247,6 @@ finalhandler/index.js:
    *)
 
 express/lib/view.js:
-express/lib/application.js:
-express/lib/request.js:
-express/lib/express.js:
-express/index.js:
   (*!
    * express
    * Copyright(c) 2009-2013 TJ Holowaychuk
@@ -50171,7 +50277,6 @@ proxy-addr/index.js:
    *)
 
 express/lib/utils.js:
-express/lib/response.js:
   (*!
    * express
    * Copyright(c) 2009-2013 TJ Holowaychuk
@@ -50180,12 +50285,35 @@ express/lib/response.js:
    *)
 
 router/lib/layer.js:
+  (*!
+   * router
+   * Copyright(c) 2013 Roman Shtylman
+   * Copyright(c) 2014-2022 Douglas Christopher Wilson
+   * MIT Licensed
+   *)
+
 router/lib/route.js:
+  (*!
+   * router
+   * Copyright(c) 2013 Roman Shtylman
+   * Copyright(c) 2014-2022 Douglas Christopher Wilson
+   * MIT Licensed
+   *)
+
 router/index.js:
   (*!
    * router
    * Copyright(c) 2013 Roman Shtylman
    * Copyright(c) 2014-2022 Douglas Christopher Wilson
+   * MIT Licensed
+   *)
+
+express/lib/application.js:
+  (*!
+   * express
+   * Copyright(c) 2009-2013 TJ Holowaychuk
+   * Copyright(c) 2013 Roman Shtylman
+   * Copyright(c) 2014-2015 Douglas Christopher Wilson
    * MIT Licensed
    *)
 
@@ -50222,6 +50350,15 @@ range-parser/index.js:
    * MIT Licensed
    *)
 
+express/lib/request.js:
+  (*!
+   * express
+   * Copyright(c) 2009-2013 TJ Holowaychuk
+   * Copyright(c) 2013 Roman Shtylman
+   * Copyright(c) 2014-2015 Douglas Christopher Wilson
+   * MIT Licensed
+   *)
+
 content-disposition/index.js:
   (*!
    * content-disposition
@@ -50252,12 +50389,38 @@ vary/index.js:
    * MIT Licensed
    *)
 
+express/lib/response.js:
+  (*!
+   * express
+   * Copyright(c) 2009-2013 TJ Holowaychuk
+   * Copyright(c) 2014-2015 Douglas Christopher Wilson
+   * MIT Licensed
+   *)
+
 serve-static/index.js:
   (*!
    * serve-static
    * Copyright(c) 2010 Sencha Inc.
    * Copyright(c) 2011 TJ Holowaychuk
    * Copyright(c) 2014-2016 Douglas Christopher Wilson
+   * MIT Licensed
+   *)
+
+express/lib/express.js:
+  (*!
+   * express
+   * Copyright(c) 2009-2013 TJ Holowaychuk
+   * Copyright(c) 2013 Roman Shtylman
+   * Copyright(c) 2014-2015 Douglas Christopher Wilson
+   * MIT Licensed
+   *)
+
+express/index.js:
+  (*!
+   * express
+   * Copyright(c) 2009-2013 TJ Holowaychuk
+   * Copyright(c) 2013 Roman Shtylman
+   * Copyright(c) 2014-2015 Douglas Christopher Wilson
    * MIT Licensed
    *)
 */
