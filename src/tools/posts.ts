@@ -2,7 +2,9 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { fbFetch, fbPost, fbDelete } from "../fb-client.js";
 
-const POST_FIELDS = "id,message,created_time,type,permalink_url,full_picture,shares,likes.summary(true),comments.summary(true)";
+// Removed likes.summary(true) and comments.summary(true) — deprecated aggregated
+// sub-fields on /feed and /published_posts endpoints since Graph API v3.3+
+const POST_FIELDS = "id,message,created_time,type,permalink_url,full_picture,shares";
 
 export function registerPostTools(server: McpServer): void {
   // 1. list_page_posts
