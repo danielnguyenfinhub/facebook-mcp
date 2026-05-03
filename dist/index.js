@@ -46057,7 +46057,7 @@ function registerPageTools(server) {
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);
         if (params.before) qs.set("before", params.before);
-        const result = await fbFetch(`/me/accounts?${qs}`);
+        const result = await marketingFetch(`/me/accounts?${qs}`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -47389,11 +47389,11 @@ function registerEventTools(server) {
 function registerUserTools(server) {
   server.tool(
     "get_me",
-    "Get the authenticated user's profile information",
+    "Get the authenticated user/system user profile information",
     {},
     async () => {
       try {
-        const result = await fbFetch(`/me?fields=id,name,first_name,last_name,picture`);
+        const result = await marketingFetch(`/me?fields=id,name`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -47415,7 +47415,7 @@ function registerUserTools(server) {
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);
         if (params.before) qs.set("before", params.before);
-        const result = await fbFetch(`/me/accounts?${qs}`);
+        const result = await marketingFetch(`/me/accounts?${qs}`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -47430,7 +47430,7 @@ function registerUserTools(server) {
     },
     async ({ input_token }) => {
       try {
-        const result = await fbFetch(`/debug_token?input_token=${encodeURIComponent(input_token)}`);
+        const result = await marketingFetch(`/debug_token?input_token=${encodeURIComponent(input_token)}`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -48706,7 +48706,7 @@ var initError = null;
 function createServer() {
   const server = new McpServer({
     name: "facebook-mcp-server",
-    version: "2.0.0"
+    version: "2.1.0"
   });
   registerPageTools(server);
   registerPostTools(server);
@@ -48768,7 +48768,7 @@ async function main() {
       res.json({
         status: "ok",
         server: "facebook-mcp-server",
-        version: "2.0.0",
+        version: "2.1.0",
         tools: TOOL_COUNT,
         activeSessions: sessions.size,
         token: tokenStatus ? {

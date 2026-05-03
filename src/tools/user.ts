@@ -1,16 +1,16 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { fbFetch } from "../fb-client.js";
+import { marketingFetch } from "../fb-client.js";
 
 export function registerUserTools(server: McpServer): void {
-  // 1. get_me
+  // 1. get_me — uses USER_TOKEN for System User compatibility
   server.tool(
     "get_me",
-    "Get the authenticated user's profile information",
+    "Get the authenticated user/system user profile information",
     {},
     async () => {
       try {
-        const result = await fbFetch(`/me?fields=id,name,first_name,last_name,picture`);
+        const result = await marketingFetch(`/me?fields=id,name`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -18,7 +18,7 @@ export function registerUserTools(server: McpServer): void {
     }
   );
 
-  // 2. list_accounts
+  // 2. list_accounts — uses USER_TOKEN for /me/accounts
   server.tool(
     "list_accounts",
     "List Pages the authenticated user manages (with access tokens)",
@@ -34,7 +34,7 @@ export function registerUserTools(server: McpServer): void {
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);
         if (params.before) qs.set("before", params.before);
-        const result = await fbFetch(`/me/accounts?${qs}`);
+        const result = await marketingFetch(`/me/accounts?${qs}`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -51,7 +51,7 @@ export function registerUserTools(server: McpServer): void {
     },
     async ({ input_token }) => {
       try {
-        const result = await fbFetch(`/debug_token?input_token=${encodeURIComponent(input_token)}`);
+        const result = await marketingFetch(`/debug_token?input_token=${encodeURIComponent(input_token)}`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };

@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { fbFetch, fbPost, getPageId } from "../fb-client.js";
+import { fbFetch, fbPost, getPageId, marketingFetch } from "../fb-client.js";
 
 export function registerPageTools(server: McpServer): void {
   // 1. get_page
@@ -36,7 +36,7 @@ export function registerPageTools(server: McpServer): void {
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);
         if (params.before) qs.set("before", params.before);
-        const result = await fbFetch(`/me/accounts?${qs}`);
+        const result = await marketingFetch(`/me/accounts?${qs}`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
