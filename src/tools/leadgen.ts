@@ -15,7 +15,7 @@ export function registerLeadGenTools(server: McpServer): void {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,name,status,created_time,leads_count");
         if (params.limit) qs.set("limit", String(params.limit));
@@ -58,7 +58,7 @@ export function registerLeadGenTools(server: McpServer): void {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,created_time,field_data");
         if (params.limit) qs.set("limit", String(params.limit));

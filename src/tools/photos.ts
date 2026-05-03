@@ -15,7 +15,7 @@ export function registerPhotoTools(server: McpServer): void {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,name,source,link,created_time,album");
         qs.set("type", "uploaded");
@@ -96,7 +96,7 @@ export function registerPhotoTools(server: McpServer): void {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,name,count,cover_photo,created_time,description,type");
         if (params.limit) qs.set("limit", String(params.limit));

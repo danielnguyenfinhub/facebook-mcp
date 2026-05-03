@@ -17,7 +17,7 @@ export function registerEventTools(server: McpServer): void {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", EVENT_FIELDS);
         if (params.limit) qs.set("limit", String(params.limit));

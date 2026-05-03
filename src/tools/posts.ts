@@ -19,7 +19,7 @@ export function registerPostTools(server: McpServer): void {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", POST_FIELDS);
         if (params.limit) qs.set("limit", String(params.limit));
@@ -45,7 +45,7 @@ export function registerPostTools(server: McpServer): void {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", POST_FIELDS);
         if (params.limit) qs.set("limit", String(params.limit));
@@ -71,7 +71,7 @@ export function registerPostTools(server: McpServer): void {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);
@@ -195,7 +195,7 @@ export function registerPostTools(server: McpServer): void {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);
@@ -220,7 +220,7 @@ export function registerPostTools(server: McpServer): void {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);

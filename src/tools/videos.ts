@@ -15,7 +15,7 @@ export function registerVideoTools(server: McpServer): void {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,title,description,source,created_time,length,views,likes.summary(true)");
         if (params.limit) qs.set("limit", String(params.limit));
@@ -58,7 +58,7 @@ export function registerVideoTools(server: McpServer): void {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,title,description,status,live_views,permalink_url,creation_time");
         if (params.limit) qs.set("limit", String(params.limit));

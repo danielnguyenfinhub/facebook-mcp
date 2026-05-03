@@ -16,7 +16,7 @@ export function registerInsightTools(server: McpServer): void {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("metric", params.metrics);
         if (params.period) qs.set("period", params.period);

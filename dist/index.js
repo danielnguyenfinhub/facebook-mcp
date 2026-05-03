@@ -46198,7 +46198,7 @@ function registerPostTools(server) {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", POST_FIELDS);
         if (params.limit) qs.set("limit", String(params.limit));
@@ -46222,7 +46222,7 @@ function registerPostTools(server) {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", POST_FIELDS);
         if (params.limit) qs.set("limit", String(params.limit));
@@ -46246,7 +46246,7 @@ function registerPostTools(server) {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);
@@ -46362,7 +46362,7 @@ function registerPostTools(server) {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);
@@ -46385,7 +46385,7 @@ function registerPostTools(server) {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);
@@ -46539,7 +46539,7 @@ function registerPhotoTools(server) {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,name,source,link,created_time,album");
         qs.set("type", "uploaded");
@@ -46614,7 +46614,7 @@ function registerPhotoTools(server) {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,name,count,cover_photo,created_time,description,type");
         if (params.limit) qs.set("limit", String(params.limit));
@@ -46642,7 +46642,7 @@ function registerVideoTools(server) {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,title,description,source,created_time,length,views,likes.summary(true)");
         if (params.limit) qs.set("limit", String(params.limit));
@@ -46681,7 +46681,7 @@ function registerVideoTools(server) {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,title,description,status,live_views,permalink_url,creation_time");
         if (params.limit) qs.set("limit", String(params.limit));
@@ -46732,7 +46732,7 @@ function registerInsightTools(server) {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("metric", params.metrics);
         if (params.period) qs.set("period", params.period);
@@ -46812,7 +46812,7 @@ function registerConversationTools(server) {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,link,message_count,unread_count,updated_time,participants");
         if (params.limit) qs.set("limit", String(params.limit));
@@ -46851,7 +46851,7 @@ function registerConversationTools(server) {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,message,from,to,created_time,attachments");
         if (params.limit) qs.set("limit", String(params.limit));
@@ -47221,7 +47221,7 @@ function registerLeadGenTools(server) {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,name,status,created_time,leads_count");
         if (params.limit) qs.set("limit", String(params.limit));
@@ -47260,7 +47260,7 @@ function registerLeadGenTools(server) {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,created_time,field_data");
         if (params.limit) qs.set("limit", String(params.limit));
@@ -47304,7 +47304,7 @@ function registerEventTools(server) {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", EVENT_FIELDS);
         if (params.limit) qs.set("limit", String(params.limit));
@@ -47452,7 +47452,7 @@ function registerRatingTools(server) {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "reviewer,created_time,rating,review_text,recommendation_type");
         if (params.limit) qs.set("limit", String(params.limit));

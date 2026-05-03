@@ -15,7 +15,7 @@ export function registerRatingTools(server: McpServer): void {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "reviewer,created_time,rating,review_text,recommendation_type");
         if (params.limit) qs.set("limit", String(params.limit));

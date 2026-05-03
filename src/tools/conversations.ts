@@ -15,7 +15,7 @@ export function registerConversationTools(server: McpServer): void {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,link,message_count,unread_count,updated_time,participants");
         if (params.limit) qs.set("limit", String(params.limit));
@@ -58,7 +58,7 @@ export function registerConversationTools(server: McpServer): void {
     },
     async (params) => {
       try {
-        const pid = pid || getPageId();
+        const pid = params.page_id || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,message,from,to,created_time,attachments");
         if (params.limit) qs.set("limit", String(params.limit));
