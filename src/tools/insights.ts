@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { fbFetch } from "../fb-client.js";
+import { fbFetch, getPageId } from "../fb-client.js";
 
 export function registerInsightTools(server: McpServer): void {
   // 1. get_page_insights
@@ -8,7 +8,7 @@ export function registerInsightTools(server: McpServer): void {
     "get_page_insights",
     "Get Page-level insights/analytics. Common metrics: page_impressions, page_engaged_users, page_fans, page_views_total, page_actions_post_reactions_total, page_fan_adds, page_fan_removes. Periods: day, week, days_28, month, lifetime.",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
       metrics: z.string().describe("Comma-separated metric names"),
       period: z.enum(["day", "week", "days_28", "month", "lifetime"]).optional().describe("Aggregation period"),
       since: z.string().optional().describe("Start date (YYYY-MM-DD or Unix timestamp)"),
@@ -16,12 +16,13 @@ export function registerInsightTools(server: McpServer): void {
     },
     async (params) => {
       try {
+        const pid = pid || getPageId();
         const qs = new URLSearchParams();
         qs.set("metric", params.metrics);
         if (params.period) qs.set("period", params.period);
         if (params.since) qs.set("since", params.since);
         if (params.until) qs.set("until", params.until);
-        const result = await fbFetch(`/${params.page_id}/insights?${qs}`);
+        const result = await fbFetch(`/${pid}/insights?${qs}`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -75,11 +76,10 @@ export function registerInsightTools(server: McpServer): void {
     "get_page_fans_by_city",
     "Get Page fans broken down by city",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
     },
-    async ({ page_id }) => {
-      try {
-        const result = await fbFetch(`/${page_id}/insights?metric=page_fans_city&period=lifetime`);
+    async ({ page_id }) => { try { const pid = page_id || getPageId();
+        const result = await fbFetch(`/${pid}/insights?metric=page_fans_city&period=lifetime`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };

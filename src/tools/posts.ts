@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { fbFetch, fbPost, fbDelete } from "../fb-client.js";
+import { fbFetch, fbPost, fbDelete, getPageId } from "../fb-client.js";
 
 // Removed likes.summary(true) and comments.summary(true) — deprecated aggregated
 // sub-fields on /feed and /published_posts endpoints since Graph API v3.3+
@@ -12,19 +12,20 @@ export function registerPostTools(server: McpServer): void {
     "list_page_posts",
     "List posts from a Page's feed (includes visitor posts)",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
       limit: z.number().optional().default(25).describe("Number of results (default 25)"),
       after: z.string().optional().describe("Pagination cursor (after)"),
       before: z.string().optional().describe("Pagination cursor (before)"),
     },
     async (params) => {
       try {
+        const pid = pid || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", POST_FIELDS);
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);
         if (params.before) qs.set("before", params.before);
-        const result = await fbFetch(`/${params.page_id}/feed?${qs}`);
+        const result = await fbFetch(`/${pid}/feed?${qs}`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -37,19 +38,20 @@ export function registerPostTools(server: McpServer): void {
     "list_published_posts",
     "List only published posts by the Page",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
       limit: z.number().optional().default(25).describe("Number of results (default 25)"),
       after: z.string().optional().describe("Pagination cursor (after)"),
       before: z.string().optional().describe("Pagination cursor (before)"),
     },
     async (params) => {
       try {
+        const pid = pid || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", POST_FIELDS);
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);
         if (params.before) qs.set("before", params.before);
-        const result = await fbFetch(`/${params.page_id}/published_posts?${qs}`);
+        const result = await fbFetch(`/${pid}/published_posts?${qs}`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -62,18 +64,19 @@ export function registerPostTools(server: McpServer): void {
     "list_scheduled_posts",
     "List scheduled (unpublished) posts for a Page",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
       limit: z.number().optional().default(25).describe("Number of results (default 25)"),
       after: z.string().optional().describe("Pagination cursor (after)"),
       before: z.string().optional().describe("Pagination cursor (before)"),
     },
     async (params) => {
       try {
+        const pid = pid || getPageId();
         const qs = new URLSearchParams();
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);
         if (params.before) qs.set("before", params.before);
-        const result = await fbFetch(`/${params.page_id}/scheduled_posts?${qs}`);
+        const result = await fbFetch(`/${pid}/scheduled_posts?${qs}`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -86,20 +89,19 @@ export function registerPostTools(server: McpServer): void {
     "create_post",
     "Create a new post on a Page",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
       message: z.string().optional().describe("Post message text"),
       link: z.string().optional().describe("URL to share"),
       published: z.boolean().optional().describe("Whether to publish immediately (default true)"),
       scheduled_publish_time: z.number().optional().describe("Unix timestamp for scheduled publish"),
     },
-    async ({ page_id, ...body }) => {
-      try {
+    async ({ page_id, ...body }) => { try { const pid = page_id || getPageId();
         const payload: Record<string, any> = {};
         if (body.message !== undefined) payload.message = body.message;
         if (body.link !== undefined) payload.link = body.link;
         if (body.published !== undefined) payload.published = body.published;
         if (body.scheduled_publish_time !== undefined) payload.scheduled_publish_time = body.scheduled_publish_time;
-        const result = await fbPost(`/${page_id}/feed`, payload);
+        const result = await fbPost(`/${pid}/feed`, payload);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -112,17 +114,16 @@ export function registerPostTools(server: McpServer): void {
     "create_photo_post",
     "Create a photo post on a Page",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
       url: z.string().describe("Public URL of the photo"),
       caption: z.string().optional().describe("Photo caption"),
       published: z.boolean().optional().describe("Whether to publish immediately (default true)"),
     },
-    async ({ page_id, ...body }) => {
-      try {
+    async ({ page_id, ...body }) => { try { const pid = page_id || getPageId();
         const payload: Record<string, any> = { url: body.url };
         if (body.caption !== undefined) payload.caption = body.caption;
         if (body.published !== undefined) payload.published = body.published;
-        const result = await fbPost(`/${page_id}/photos`, payload);
+        const result = await fbPost(`/${pid}/photos`, payload);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -187,18 +188,19 @@ export function registerPostTools(server: McpServer): void {
     "list_visitor_posts",
     "List posts by visitors on a Page",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
       limit: z.number().optional().default(25).describe("Number of results (default 25)"),
       after: z.string().optional().describe("Pagination cursor (after)"),
       before: z.string().optional().describe("Pagination cursor (before)"),
     },
     async (params) => {
       try {
+        const pid = pid || getPageId();
         const qs = new URLSearchParams();
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);
         if (params.before) qs.set("before", params.before);
-        const result = await fbFetch(`/${params.page_id}/visitor_posts?${qs}`);
+        const result = await fbFetch(`/${pid}/visitor_posts?${qs}`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -211,18 +213,19 @@ export function registerPostTools(server: McpServer): void {
     "list_tagged_posts",
     "List posts the Page is tagged in",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
       limit: z.number().optional().default(25).describe("Number of results (default 25)"),
       after: z.string().optional().describe("Pagination cursor (after)"),
       before: z.string().optional().describe("Pagination cursor (before)"),
     },
     async (params) => {
       try {
+        const pid = pid || getPageId();
         const qs = new URLSearchParams();
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);
         if (params.before) qs.set("before", params.before);
-        const result = await fbFetch(`/${params.page_id}/tagged?${qs}`);
+        const result = await fbFetch(`/${pid}/tagged?${qs}`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };

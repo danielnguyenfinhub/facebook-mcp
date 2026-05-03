@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { fbFetch, fbPost } from "../fb-client.js";
+import { fbFetch, fbPost, getPageId } from "../fb-client.js";
 
 export function registerPageTools(server: McpServer): void {
   // 1. get_page
@@ -8,12 +8,11 @@ export function registerPageTools(server: McpServer): void {
     "get_page",
     "Get details of a Facebook Page by ID",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
     },
-    async ({ page_id }) => {
-      try {
+    async ({ page_id }) => { try { const pid = page_id || getPageId();
         const fields = "id,name,about,category,fan_count,followers_count,link,website,phone,emails,location,hours,cover,picture,description,single_line_address,is_published,verification_status,rating_count,overall_star_rating";
-        const result = await fbFetch(`/${page_id}?fields=${fields}`);
+        const result = await fbFetch(`/${pid}?fields=${fields}`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -50,22 +49,21 @@ export function registerPageTools(server: McpServer): void {
     "update_page",
     "Update a Facebook Page's information",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
       about: z.string().optional().describe("About text"),
       description: z.string().optional().describe("Page description"),
       website: z.string().optional().describe("Website URL"),
       phone: z.string().optional().describe("Phone number"),
       hours: z.record(z.string()).optional().describe("Business hours object"),
     },
-    async ({ page_id, ...fields }) => {
-      try {
+    async ({ page_id, ...fields }) => { try { const pid = page_id || getPageId();
         const body: Record<string, any> = {};
         if (fields.about !== undefined) body.about = fields.about;
         if (fields.description !== undefined) body.description = fields.description;
         if (fields.website !== undefined) body.website = fields.website;
         if (fields.phone !== undefined) body.phone = fields.phone;
         if (fields.hours !== undefined) body.hours = fields.hours;
-        const result = await fbPost(`/${page_id}`, body);
+        const result = await fbPost(`/${pid}`, body);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -78,11 +76,10 @@ export function registerPageTools(server: McpServer): void {
     "get_page_settings",
     "Get settings for a Facebook Page",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
     },
-    async ({ page_id }) => {
-      try {
-        const result = await fbFetch(`/${page_id}/settings`);
+    async ({ page_id }) => { try { const pid = page_id || getPageId();
+        const result = await fbFetch(`/${pid}/settings`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -95,13 +92,12 @@ export function registerPageTools(server: McpServer): void {
     "update_page_settings",
     "Update a setting for a Facebook Page",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
       setting: z.string().describe("Setting name"),
       value: z.boolean().describe("Setting value"),
     },
-    async ({ page_id, setting, value }) => {
-      try {
-        const result = await fbPost(`/${page_id}/settings`, { option: { [setting]: value } });
+    async ({ page_id, setting, value }) => { try { const pid = page_id || getPageId();
+        const result = await fbPost(`/${pid}/settings`, { option: { [setting]: value } });
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -140,12 +136,11 @@ export function registerPageTools(server: McpServer): void {
     "subscribe_app",
     "Subscribe an app to a Page's webhooks",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
       subscribed_fields: z.array(z.string()).describe("List of fields to subscribe to (e.g., feed, messages)"),
     },
-    async ({ page_id, subscribed_fields }) => {
-      try {
-        const result = await fbPost(`/${page_id}/subscribed_apps`, { subscribed_fields });
+    async ({ page_id, subscribed_fields }) => { try { const pid = page_id || getPageId();
+        const result = await fbPost(`/${pid}/subscribed_apps`, { subscribed_fields });
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -158,11 +153,10 @@ export function registerPageTools(server: McpServer): void {
     "get_page_tabs",
     "Get the tabs on a Facebook Page",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
     },
-    async ({ page_id }) => {
-      try {
-        const result = await fbFetch(`/${page_id}/tabs`);
+    async ({ page_id }) => { try { const pid = page_id || getPageId();
+        const result = await fbFetch(`/${pid}/tabs`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };

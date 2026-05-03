@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { fbFetch, fbPost } from "../fb-client.js";
+import { fbFetch, fbPost, getPageId } from "../fb-client.js";
 
 export function registerConversationTools(server: McpServer): void {
   // 1. list_conversations
@@ -8,19 +8,20 @@ export function registerConversationTools(server: McpServer): void {
     "list_conversations",
     "List conversations (Messenger threads) for a Page",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
       limit: z.number().optional().default(25).describe("Number of results (default 25)"),
       after: z.string().optional().describe("Pagination cursor (after)"),
       before: z.string().optional().describe("Pagination cursor (before)"),
     },
     async (params) => {
       try {
+        const pid = pid || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,link,message_count,unread_count,updated_time,participants");
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);
         if (params.before) qs.set("before", params.before);
-        const result = await fbFetch(`/${params.page_id}/conversations?${qs}`);
+        const result = await fbFetch(`/${pid}/conversations?${qs}`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -57,6 +58,7 @@ export function registerConversationTools(server: McpServer): void {
     },
     async (params) => {
       try {
+        const pid = pid || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,message,from,to,created_time,attachments");
         if (params.limit) qs.set("limit", String(params.limit));
@@ -92,7 +94,7 @@ export function registerConversationTools(server: McpServer): void {
     "send_message",
     "Send a message to a user via Messenger (Page must have messaging permissions)",
     {
-      page_id: z.string().describe("The Page ID (used for context; message is sent via /me/messages)"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
       recipient_id: z.string().describe("The recipient's user ID"),
       text: z.string().describe("Message text to send"),
     },

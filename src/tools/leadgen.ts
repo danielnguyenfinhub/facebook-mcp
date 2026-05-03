@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { fbFetch } from "../fb-client.js";
+import { fbFetch, getPageId } from "../fb-client.js";
 
 export function registerLeadGenTools(server: McpServer): void {
   // 1. list_leadgen_forms
@@ -8,19 +8,20 @@ export function registerLeadGenTools(server: McpServer): void {
     "list_leadgen_forms",
     "List lead generation forms for a Page",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
       limit: z.number().optional().default(25).describe("Number of results (default 25)"),
       after: z.string().optional().describe("Pagination cursor (after)"),
       before: z.string().optional().describe("Pagination cursor (before)"),
     },
     async (params) => {
       try {
+        const pid = pid || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,name,status,created_time,leads_count");
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);
         if (params.before) qs.set("before", params.before);
-        const result = await fbFetch(`/${params.page_id}/leadgen_forms?${qs}`);
+        const result = await fbFetch(`/${pid}/leadgen_forms?${qs}`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -57,6 +58,7 @@ export function registerLeadGenTools(server: McpServer): void {
     },
     async (params) => {
       try {
+        const pid = pid || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,created_time,field_data");
         if (params.limit) qs.set("limit", String(params.limit));

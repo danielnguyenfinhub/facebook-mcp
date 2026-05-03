@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { fbFetch, fbPost, fbDelete } from "../fb-client.js";
+import { fbFetch, fbPost, fbDelete, getPageId } from "../fb-client.js";
 
 export function registerPhotoTools(server: McpServer): void {
   // 1. list_page_photos
@@ -8,20 +8,21 @@ export function registerPhotoTools(server: McpServer): void {
     "list_page_photos",
     "List photos uploaded to a Page",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
       limit: z.number().optional().default(25).describe("Number of results (default 25)"),
       after: z.string().optional().describe("Pagination cursor (after)"),
       before: z.string().optional().describe("Pagination cursor (before)"),
     },
     async (params) => {
       try {
+        const pid = pid || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,name,source,link,created_time,album");
         qs.set("type", "uploaded");
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);
         if (params.before) qs.set("before", params.before);
-        const result = await fbFetch(`/${params.page_id}/photos?${qs}`);
+        const result = await fbFetch(`/${pid}/photos?${qs}`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -51,15 +52,14 @@ export function registerPhotoTools(server: McpServer): void {
     "upload_photo",
     "Upload a photo to a Page from a URL",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
       url: z.string().describe("Public URL of the photo"),
       caption: z.string().optional().describe("Photo caption"),
     },
-    async ({ page_id, url, caption }) => {
-      try {
+    async ({ page_id, url, caption }) => { try { const pid = page_id || getPageId();
         const payload: Record<string, any> = { url };
         if (caption !== undefined) payload.caption = caption;
-        const result = await fbPost(`/${page_id}/photos`, payload);
+        const result = await fbPost(`/${pid}/photos`, payload);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
@@ -89,19 +89,20 @@ export function registerPhotoTools(server: McpServer): void {
     "list_albums",
     "List photo albums on a Page",
     {
-      page_id: z.string().describe("The Page ID"),
+      page_id: z.string().optional().describe("Page ID (defaults to configured page)"),
       limit: z.number().optional().default(25).describe("Number of results (default 25)"),
       after: z.string().optional().describe("Pagination cursor (after)"),
       before: z.string().optional().describe("Pagination cursor (before)"),
     },
     async (params) => {
       try {
+        const pid = pid || getPageId();
         const qs = new URLSearchParams();
         qs.set("fields", "id,name,count,cover_photo,created_time,description,type");
         if (params.limit) qs.set("limit", String(params.limit));
         if (params.after) qs.set("after", params.after);
         if (params.before) qs.set("before", params.before);
-        const result = await fbFetch(`/${params.page_id}/albums?${qs}`);
+        const result = await fbFetch(`/${pid}/albums?${qs}`);
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
       } catch (e: unknown) {
         return { content: [{ type: "text", text: String(e) }], isError: true };
